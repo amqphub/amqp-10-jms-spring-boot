@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.amqphub.spring.boot.jms.autoconfigure.AMQP10JMSAutoConfiguration
