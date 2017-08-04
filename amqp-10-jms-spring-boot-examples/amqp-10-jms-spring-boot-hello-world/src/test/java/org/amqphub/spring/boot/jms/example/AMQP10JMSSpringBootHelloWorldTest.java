@@ -36,7 +36,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Simple Hello World example that sends and receives a message
+ * Simple Hello World example that sends and receives a message using both the
+ * Hello World Command Line instance and a manual call to show either can work.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -75,7 +76,7 @@ public class AMQP10JMSSpringBootHelloWorldTest {
     public void testMessageIsSent() throws Exception {
         producer.sendMessage("Hello: " + name.getMethodName());
 
-        // Should have our send plug the one sent by the run of MessageProducer by Spring
+        // Should have our send plus the one sent by the run of MessageProducer by Spring
         QueueViewMBean queueView = getProxyToQueue("example");
         assertEquals(2, queueView.getEnqueueCount());
     }
