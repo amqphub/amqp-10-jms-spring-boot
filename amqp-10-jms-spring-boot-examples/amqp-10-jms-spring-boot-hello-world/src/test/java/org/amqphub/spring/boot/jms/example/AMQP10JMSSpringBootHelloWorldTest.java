@@ -22,14 +22,11 @@ import javax.jms.JMSException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import org.amqphub.spring.boot.jms.example.MessageConsumer;
-import org.amqphub.spring.boot.jms.example.MessageProducer;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -45,19 +42,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class AMQP10JMSSpringBootHelloWorldTest {
 
-    private BrokerService brokerService;
+    private static BrokerService brokerService;
 
     @Autowired
-    public MessageConsumer consumer;
+    public HelloWorldMessageConsumer consumer;
 
     @Autowired
-    public MessageProducer producer;
+    public HelloWorldMessageProducer producer;
 
     @Rule
     public TestName name = new TestName();
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
         brokerService = new BrokerService();
 
         brokerService.addConnector("amqp://localhost:5672");
@@ -68,19 +65,19 @@ public class AMQP10JMSSpringBootHelloWorldTest {
         brokerService.waitUntilStarted();
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         brokerService.stop();
         brokerService.waitUntilStopped();
     }
 
-    @Ignore("Test fails, broker not started")
     @Test
     public void testMessageIsSent() throws Exception {
         producer.sendMessage("Hello: " + name.getMethodName());
 
+        // Should have our send plug the one sent by the run of MessageProducer by Spring
         QueueViewMBean queueView = getProxyToQueue("example");
-        assertEquals(1, queueView.getEnqueueCount());
+        assertEquals(2, queueView.getEnqueueCount());
     }
 
     protected BrokerViewMBean getProxyToBroker() throws MalformedObjectNameException, JMSException {

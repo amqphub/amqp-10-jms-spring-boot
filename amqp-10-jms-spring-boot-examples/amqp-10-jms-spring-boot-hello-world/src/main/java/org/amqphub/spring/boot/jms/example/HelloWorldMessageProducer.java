@@ -18,16 +18,27 @@ package org.amqphub.spring.boot.jms.example;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.annotation.JmsListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MessageConsumer {
+public class HelloWorldMessageProducer implements CommandLineRunner {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MessageConsumer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HelloWorldMessageProducer.class);
 
-    @JmsListener(destination = "example")
-    public void processMsg(String message) {
-        LOG.info("============= Received: " + message);
+    @Autowired
+    public JmsTemplate jmsTemplate;
+
+    @Override
+    public void run(String... strings) throws Exception {
+        final String messageText = "Hello World";
+        LOG.info("============= Sending " + messageText);
+        sendMessage(messageText);
+    }
+
+    public void sendMessage(String payload) {
+        this.jmsTemplate.convertAndSend("example", payload);
     }
 }
