@@ -48,7 +48,7 @@
   <scm>
     <url>https://github.com/amqphub/amqp-10-jms-spring-boot.git</url>
     <connection>scm:git:git://github.com/amqphub/amqp-10-jms-spring-boot.git</connection>
-    <developerConnection>scm:git:ssh@github.com:amqphub/amqp-10-jms-spring-boot.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:amqphub/amqp-10-jms-spring-boot.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
