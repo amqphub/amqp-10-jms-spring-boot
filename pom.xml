@@ -62,7 +62,7 @@
   <properties>
     <qpid-jms-version>0.24.0</qpid-jms-version>
 
-    <apache-rat-version>0.13-SNAPSHOT</apache-rat-version>
+    <apache-rat-version>0.12</apache-rat-version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -74,6 +74,7 @@
     <maven-eclipse-plugin-version>2.10</maven-eclipse-plugin-version>
     <maven-idea-plugin-version>2.2.1</maven-idea-plugin-version>
     <maven-surefire-plugin-version>2.18.1</maven-surefire-plugin-version>
+    <maven-release-plugin-version>2.5.3</maven-release-plugin-version>
     <nexus-staging-maven-plugin-version>1.6.8</nexus-staging-maven-plugin-version>
   </properties>
 
@@ -229,7 +230,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.3</version>
+        <version>${maven-release-plugin-version}</version>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <useReleaseProfile>false</useReleaseProfile>
