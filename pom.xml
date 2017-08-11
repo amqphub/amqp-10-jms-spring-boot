@@ -34,10 +34,6 @@
   <description>AMQP 1.0 JMS Spring Boot Starter and AutoConfiguration Tooling</description>
   <url>https://github.com/amqphub/amqp-10-jms-spring-boot</url>
 
-  <prerequisites>
-    <maven>3.0.4</maven>
-  </prerequisites>
-
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>
@@ -76,6 +72,10 @@
     <maven-surefire-plugin-version>2.18.1</maven-surefire-plugin-version>
     <maven-release-plugin-version>2.5.3</maven-release-plugin-version>
     <nexus-staging-maven-plugin-version>1.6.8</nexus-staging-maven-plugin-version>
+
+    <!-- Test properties -->
+    <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+    <surefire.runOrder>filesystem</surefire.runOrder>
   </properties>
 
   <repositories>
