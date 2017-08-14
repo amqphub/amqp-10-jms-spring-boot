@@ -59,8 +59,8 @@ public class Requestor {
 
         @Override
         public void run(String... strings) throws Exception {
-            final String messageText = "Hello World";
-            LOG.info("============= Sending " + messageText);
+            final String messageText = "Request";
+            LOG.info("============= Sending: " + messageText);
             this.jmsTemplate.send("example", new MessageCreator() {
 
                 @Override

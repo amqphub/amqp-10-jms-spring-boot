@@ -34,7 +34,7 @@ public class HelloWorldMessageProducer implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         final String messageText = "Hello World";
-        LOG.info("============= Sending " + messageText);
+        LOG.info("============= Sending: " + messageText);
         sendMessage(messageText);
     }
 
