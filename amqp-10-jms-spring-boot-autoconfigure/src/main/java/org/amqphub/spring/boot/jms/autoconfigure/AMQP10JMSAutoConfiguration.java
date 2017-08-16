@@ -26,8 +26,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.JndiConnectionFactoryAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 /**
  * Auto Configuration class for the AMQP 1.0 JMS client
@@ -36,8 +36,13 @@ import org.springframework.context.annotation.Import;
 @AutoConfigureBefore(JmsAutoConfiguration.class)
 @AutoConfigureAfter({JndiConnectionFactoryAutoConfiguration.class})
 @ConditionalOnClass({ConnectionFactory.class, JmsConnectionFactory.class})
-@ConditionalOnMissingBean(ConnectionFactory.class)
 @EnableConfigurationProperties(AMQP10JMSProperties.class)
-@Import({AMQP10JMSConnectionFactoryConfiguration.class})
 public class AMQP10JMSAutoConfiguration {
+
+	@Bean
+	@ConditionalOnMissingBean(ConnectionFactory.class)
+	public JmsConnectionFactory jmsConnectionFactory(AMQP10JMSProperties properties) {
+		return new AMQP10JMSConnectionFactoryFactory(properties)
+				.createConnectionFactory(JmsConnectionFactory.class);
+	}
 }
