@@ -21,6 +21,7 @@ import org.apache.qpid.jms.policy.JmsDefaultDeserializationPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -58,10 +59,7 @@ public class AMQP10JMSConnectionFactoryFactory {
         try {
             JmsConnectionFactory factory = new JmsConnectionFactory();
 
-            factory.setRemoteURI(getRemoteURI());
-
-            // Override the URI options with configuration values, but only if
-            // the value is actually set.
+            factory.setRemoteURI(properties.getBrokerUrl());
 
             if (StringUtils.hasLength(properties.getUsername())) {
                 factory.setUsername(properties.getUsername());
@@ -75,13 +73,9 @@ public class AMQP10JMSConnectionFactoryFactory {
                 factory.setClientID(properties.getClientId());
             }
 
-            if (properties.isReceiveLocalOnly() != null) {
-                factory.setReceiveLocalOnly(properties.isReceiveLocalOnly());
-            }
+            factory.setReceiveLocalOnly(properties.isReceiveLocalOnly());
 
-            if (properties.isReceiveNoWaitLocalOnly() != null) {
-                factory.setReceiveNoWaitLocalOnly(properties.isReceiveNoWaitLocalOnly());
-            }
+            factory.setReceiveNoWaitLocalOnly(properties.isReceiveNoWaitLocalOnly());
 
             configureDeserializationPolicy(properties, factory);
 
@@ -93,24 +87,18 @@ public class AMQP10JMSConnectionFactoryFactory {
         }
     }
 
-    public String getRemoteURI() {
-        if (StringUtils.hasLength(properties.getRemoteURL())) {
-            return properties.getRemoteURL();
-        } else {
-            return DEFAULT_REMOTE_URL;
-        }
-    }
-
     private void configureDeserializationPolicy(AMQP10JMSProperties properties, JmsConnectionFactory factory) {
         JmsDefaultDeserializationPolicy deserializationPolicy =
             (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
 
-        if (StringUtils.hasLength(properties.getDeserializationPolicy().getWhiteList())) {
-            deserializationPolicy.setWhiteList(properties.getDeserializationPolicy().getWhiteList());
+        if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getWhiteList())) {
+            deserializationPolicy.setWhiteList(StringUtils.collectionToCommaDelimitedString(
+                    properties.getDeserializationPolicy().getWhiteList()));
         }
 
-        if (StringUtils.hasLength(properties.getDeserializationPolicy().getBlackList())) {
-            deserializationPolicy.setBlackList(properties.getDeserializationPolicy().getBlackList());
+        if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getBlackList())) {
+            deserializationPolicy.setBlackList(StringUtils.collectionToCommaDelimitedString(
+                    properties.getDeserializationPolicy().getBlackList()));
         }
     }
 }

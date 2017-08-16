@@ -18,28 +18,53 @@ package org.amqphub.spring.boot.jms.autoconfigure;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.List;
+
 /**
  * Configuration properties for the AMQP 1.0 JMS client
  */
 @ConfigurationProperties(prefix = "amqphub.amqp10jms")
 public class AMQP10JMSProperties {
 
-    private String remoteURL;
+    /**
+     * AMQP broker url.
+     */
+    private String brokerUrl = "amqp://localhost:5672";
+
+    /**
+     * AMQP broker username.
+     */
     private String username;
+
+    /**
+     * Login password of the AMQP broker.
+     */
     private String password;
+
+    /**
+     * JMS clientID to use for connections. A clientID can only be used by one Connection at a time, so setting it
+     * will restrict the ConnectionFactory to creating a single open Connection at a time.
+     */
     private String clientId;
 
-    private Boolean receiveLocalOnly;
-    private Boolean receiveNoWaitLocalOnly;
+    /**
+     * Whether the client only checks its local message buffer when using receive calls with a timeout.
+     */
+    private boolean receiveLocalOnly = false;
+
+    /**
+     * Whether the client only checks its local message buffer when using receiveNoWait calls.
+     */
+    private boolean receiveNoWaitLocalOnly = false;
 
     private final DeserializationPolicy deserializationPolicy = new DeserializationPolicy();
 
-    public String getRemoteURL() {
-        return remoteURL;
+    public String getBrokerUrl() {
+        return brokerUrl;
     }
 
-    public void setRemoteURL(String remoteURL) {
-        this.remoteURL = remoteURL;
+    public void setBrokerUrl(String remoteURL) {
+        this.brokerUrl = remoteURL;
     }
 
     public String getUsername() {
@@ -66,19 +91,19 @@ public class AMQP10JMSProperties {
         this.clientId = clientId;
     }
 
-    public Boolean isReceiveLocalOnly() {
+    public boolean isReceiveLocalOnly() {
         return receiveLocalOnly;
     }
 
-    public void setReceiveLocalOnly(Boolean receiveLocalOnly) {
+    public void setReceiveLocalOnly(boolean receiveLocalOnly) {
         this.receiveLocalOnly = receiveLocalOnly;
     }
 
-    public Boolean isReceiveNoWaitLocalOnly() {
+    public boolean isReceiveNoWaitLocalOnly() {
         return receiveNoWaitLocalOnly;
     }
 
-    public void setReceiveNoWaitLocalOnly(Boolean receiveNoWaitLocalOnly) {
+    public void setReceiveNoWaitLocalOnly(boolean receiveNoWaitLocalOnly) {
         this.receiveNoWaitLocalOnly = receiveNoWaitLocalOnly;
     }
 
@@ -88,22 +113,30 @@ public class AMQP10JMSProperties {
 
     public static class DeserializationPolicy {
 
-        private String whiteList;
-        private String blackList;
+        /**
+         * Whitelist of classes or packages.
+         */
+        private List<String> whiteList;
 
-        public String getWhiteList() {
-            return whiteList;
+        /**
+         * Blacklist of classes or packages. Blacklist overrides the whitelist, entries that could match both are
+         * counted as blacklisted.
+         */
+        private List<String> blackList;
+
+        public List<String> getWhiteList() {
+            return this.whiteList;
         }
 
-        public void setWhiteList(String whiteList) {
+        public void setWhiteList(List<String> whiteList) {
             this.whiteList = whiteList;
         }
 
-        public String getBlackList() {
-            return blackList;
+        public List<String> getBlackList() {
+            return this.blackList;
         }
 
-        public void setBlackList(String blackList) {
+        public void setBlackList(List<String> blackList) {
             this.blackList = blackList;
         }
     }
