@@ -57,7 +57,7 @@ public class AMQP10JMSConnectionFactoryFactory {
         try {
             JmsConnectionFactory factory = new JmsConnectionFactory();
 
-            factory.setRemoteURI(properties.getBrokerUrl());
+            factory.setRemoteURI(properties.getRemoteUrl());
 
             if (StringUtils.hasLength(properties.getUsername())) {
                 factory.setUsername(properties.getUsername());

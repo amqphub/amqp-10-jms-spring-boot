@@ -27,9 +27,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AMQP10JMSProperties {
 
     /**
-     * AMQP broker url.
+     * The URL of the remote peer the AMQP client should connect to.
      */
-    private String brokerUrl = "amqp://localhost:5672";
+    private String remoteUrl = "amqp://localhost:5672";
 
     /**
      * AMQP broker username.
@@ -59,12 +59,12 @@ public class AMQP10JMSProperties {
 
     private final DeserializationPolicy deserializationPolicy = new DeserializationPolicy();
 
-    public String getBrokerUrl() {
-        return brokerUrl;
+    public String getRemoteUrl() {
+        return remoteUrl;
     }
 
-    public void setBrokerUrl(String brokerUrl) {
-        this.brokerUrl = brokerUrl;
+    public void setRemoteUrl(String remoteUrl) {
+        this.remoteUrl = remoteUrl;
     }
 
     public String getUsername() {

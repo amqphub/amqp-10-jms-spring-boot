@@ -66,7 +66,7 @@ public class AMQP10JMSAutoConfigurationTest {
     @Test
     public void testCustomConnectionFactorySettings() {
         load(EmptyConfiguration.class,
-             "amqphub.amqp10jms.broker-url=amqp://127.0.0.1:5672",
+             "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672",
              "amqphub.amqp10jms.username=foo",
              "amqphub.amqp10jms.password=bar");
 
@@ -99,7 +99,7 @@ public class AMQP10JMSAutoConfigurationTest {
     @Test
     public void testReceiveLocalOnlyOptionsAppliedFromEnvOverridesURI() {
         load(EmptyConfiguration.class,
-             "amqphub.amqp10jms.broker-url=amqp://127.0.0.1:5672" +
+             "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672" +
                  "?jms.receiveLocalOnly=false&jms.receiveNoWaitLocalOnly=false",
              "amqphub.amqp10jms.receiveLocalOnly=true",
              "amqphub.amqp10jms.receiveNoWaitLocalOnly=true");
