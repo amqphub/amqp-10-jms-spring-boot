@@ -31,8 +31,6 @@ public class AMQP10JMSConnectionFactoryFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(AMQP10JMSConnectionFactoryFactory.class);
 
-    private static final String DEFAULT_REMOTE_URL = "amqp://localhost:5672";
-
     private final AMQP10JMSProperties properties;
 
     /**

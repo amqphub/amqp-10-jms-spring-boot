@@ -16,9 +16,9 @@
  */
 package org.amqphub.spring.boot.jms.autoconfigure;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.util.List;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Configuration properties for the AMQP 1.0 JMS client
@@ -63,8 +63,8 @@ public class AMQP10JMSProperties {
         return brokerUrl;
     }
 
-    public void setBrokerUrl(String remoteURL) {
-        this.brokerUrl = remoteURL;
+    public void setBrokerUrl(String brokerUrl) {
+        this.brokerUrl = brokerUrl;
     }
 
     public String getUsername() {
