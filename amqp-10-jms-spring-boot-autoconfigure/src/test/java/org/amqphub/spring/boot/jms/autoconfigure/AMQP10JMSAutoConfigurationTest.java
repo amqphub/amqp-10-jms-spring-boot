@@ -66,9 +66,9 @@ public class AMQP10JMSAutoConfigurationTest {
     @Test
     public void testCustomConnectionFactorySettings() {
         load(EmptyConfiguration.class,
-             "spring.amqp10jms.remoteURL=amqp://127.0.0.1:5672",
-             "spring.amqp10jms.username=foo",
-             "spring.amqp10jms.password=bar");
+             "amqphub.amqp10jms.remoteURL=amqp://127.0.0.1:5672",
+             "amqphub.amqp10jms.username=foo",
+             "amqphub.amqp10jms.password=bar");
 
         JmsTemplate jmsTemplate = this.context.getBean(JmsTemplate.class);
         JmsConnectionFactory connectionFactory =
@@ -83,8 +83,8 @@ public class AMQP10JMSAutoConfigurationTest {
     @Test
     public void testReceiveLocalOnlyOptionsAppliedFromEnv() {
         load(EmptyConfiguration.class,
-             "spring.amqp10jms.receiveLocalOnly=true",
-             "spring.amqp10jms.receiveNoWaitLocalOnly=true");
+             "amqphub.amqp10jms.receiveLocalOnly=true",
+             "amqphub.amqp10jms.receiveNoWaitLocalOnly=true");
 
         JmsTemplate jmsTemplate = this.context.getBean(JmsTemplate.class);
         JmsConnectionFactory connectionFactory =
@@ -99,10 +99,10 @@ public class AMQP10JMSAutoConfigurationTest {
     @Test
     public void testReceiveLocalOnlyOptionsAppliedFromEnvOverridesURI() {
         load(EmptyConfiguration.class,
-             "spring.amqp10jms.remoteURL=amqp://127.0.0.1:5672" +
+             "amqphub.amqp10jms.remoteURL=amqp://127.0.0.1:5672" +
                  "?jms.receiveLocalOnly=false&jms.receiveNoWaitLocalOnly=false",
-             "spring.amqp10jms.receiveLocalOnly=true",
-             "spring.amqp10jms.receiveNoWaitLocalOnly=true");
+             "amqphub.amqp10jms.receiveLocalOnly=true",
+             "amqphub.amqp10jms.receiveNoWaitLocalOnly=true");
 
         JmsTemplate jmsTemplate = this.context.getBean(JmsTemplate.class);
         JmsConnectionFactory connectionFactory =

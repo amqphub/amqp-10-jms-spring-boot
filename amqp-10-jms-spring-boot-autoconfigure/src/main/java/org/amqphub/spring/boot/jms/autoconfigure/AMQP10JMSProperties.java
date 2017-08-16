@@ -21,7 +21,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Configuration properties for the AMQP 1.0 JMS client
  */
-@ConfigurationProperties(prefix = "spring.amqp10jms")
+@ConfigurationProperties(prefix = "amqphub.amqp10jms")
 public class AMQP10JMSProperties {
 
     private String remoteURL;
