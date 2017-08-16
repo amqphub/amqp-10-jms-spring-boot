@@ -23,19 +23,14 @@ import org.apache.qpid.jms.JmsConnectionFactory;
 import org.apache.qpid.jms.policy.JmsDefaultDeserializationPolicy;
 import org.junit.Test;
 
+import java.util.Collections;
+
 /**
  * Test for AMQP 1.0 JMS Properties object.
  */
 public class AMQP10JMSPropertiesTest {
 
-    private static final String DEFAULT_REMOTE_URI = "amqp://localhost:5672";
-
     private final AMQP10JMSProperties properties = new AMQP10JMSProperties();
-
-    @Test
-    public void testDefaultURL() {
-        assertEquals(DEFAULT_REMOTE_URI, new AMQP10JMSConnectionFactoryFactory(this.properties).getRemoteURI());
-    }
 
     @Test
     public void testWhiteListDefaultToEmpty() {
@@ -68,8 +63,8 @@ public class AMQP10JMSPropertiesTest {
 
     @Test
     public void testDeserializationPolicyValuesAreApplied() {
-        this.properties.getDeserializationPolicy().setWhiteList("org.apache.qpid.proton.*");
-        this.properties.getDeserializationPolicy().setBlackList("org.apache.activemq..*");
+        this.properties.getDeserializationPolicy().setWhiteList(Collections.singletonList("org.apache.qpid.proton.*"));
+        this.properties.getDeserializationPolicy().setBlackList(Collections.singletonList("org.apache.activemq..*"));
 
         JmsConnectionFactory factory = new AMQP10JMSConnectionFactoryFactory(this.properties).createConnectionFactory(JmsConnectionFactory.class);
 
