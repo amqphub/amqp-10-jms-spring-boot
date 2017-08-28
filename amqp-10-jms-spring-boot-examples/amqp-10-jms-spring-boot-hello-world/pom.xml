@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.amqphub.spring</groupId>
     <artifactId>amqp-10-jms-spring-boot-examples</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.3.0</version>
   </parent>
 
   <artifactId>amqp-10-jms-spring-boot-hello-world</artifactId>
