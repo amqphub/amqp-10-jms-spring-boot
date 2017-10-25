@@ -16,7 +16,7 @@ dependency in your project pom file:
     <dependency>
       <groupId>org.amqphub.spring</groupId>
       <artifactId>amqp-10-jms-spring-boot-starter</artifactId>
-      <version>0.1.0</version>
+      <version>${current-version}</version>
     </dependency>
 
 ## Building the code

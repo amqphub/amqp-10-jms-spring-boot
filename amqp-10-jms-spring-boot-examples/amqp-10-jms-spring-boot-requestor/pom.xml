@@ -24,7 +24,7 @@
   </parent>
 
   <artifactId>amqp-10-jms-spring-boot-requestor</artifactId>
-  <name>AMQP 1.0 JMS Spring Boot Request Service</name>
+  <name>AMQP 1.0 JMS Spring Boot Request Service Example</name>
   <description>AMQP 1.0 JMS based Requestor that uses Spring Boot</description>
 
   <properties>

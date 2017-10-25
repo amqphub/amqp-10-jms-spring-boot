@@ -24,7 +24,7 @@
   </parent>
 
   <artifactId>amqp-10-jms-spring-boot-reply-service</artifactId>
-  <name>AMQP 1.0 JMS Reply service based on Spring Boot</name>
+  <name>AMQP 1.0 JMS Spring Boot Reply Service Example</name>
   <description>A Simple Reply Service using AMQP 1.0 JMS and Spring Boot</description>
 
   <properties>
