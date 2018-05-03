@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.8.RELEASE</version>
+    <version>1.5.12.RELEASE</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -55,7 +55,7 @@
   </developers>
 
   <properties>
-    <qpid-jms-version>0.26.0</qpid-jms-version>
+    <qpid-jms-version>0.32.0</qpid-jms-version>
 
     <apache-rat-version>0.12</apache-rat-version>
 
@@ -68,7 +68,7 @@
     <maven-gpg-plugin-version>1.6</maven-gpg-plugin-version>
     <maven-eclipse-plugin-version>2.10</maven-eclipse-plugin-version>
     <maven-idea-plugin-version>2.2.1</maven-idea-plugin-version>
-    <maven-surefire-plugin-version>2.18.1</maven-surefire-plugin-version>
+    <maven-surefire-plugin-version>2.21.0</maven-surefire-plugin-version>
     <maven-release-plugin-version>2.5.3</maven-release-plugin-version>
     <nexus-staging-maven-plugin-version>1.6.8</nexus-staging-maven-plugin-version>
 
