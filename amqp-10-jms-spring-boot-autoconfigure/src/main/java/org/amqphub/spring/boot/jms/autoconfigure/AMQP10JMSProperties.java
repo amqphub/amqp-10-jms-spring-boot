@@ -186,7 +186,7 @@ public class AMQP10JMSProperties {
         /**
          * Maximum number of sessions allowed for each connection in the pool.
          */
-        private int maxSessionPerConnection = 500;
+        private int maxSessionsPerConnection = 500;
 
         /**
          * Time to sleep between runs of the connection check thread whcih will only
@@ -234,16 +234,16 @@ public class AMQP10JMSProperties {
             return this.blockIfSessionPoolIsFullTimeout;
         }
 
-        public void setBlockIfSessionPoolIsFullTimeout(Duration blockIfSessionPoolIsFullTimeout) {
-            this.blockIfSessionPoolIsFullTimeout = blockIfSessionPoolIsFullTimeout;
+        public void setBlockIfSessionPoolIsFullTimeout(long blockIfSessionPoolIsFullTimeout) {
+            this.blockIfSessionPoolIsFullTimeout = Duration.ofMillis(blockIfSessionPoolIsFullTimeout);
         }
 
         public Duration getConnectionIdleTimeout() {
             return this.connectionIdleTimeout;
         }
 
-        public void setConnectionIdleTimeout(Duration connectionIdleTimeout) {
-            this.connectionIdleTimeout = connectionIdleTimeout;
+        public void setConnectionIdleTimeout(long connectionIdleTimeout) {
+            this.connectionIdleTimeout = Duration.ofMillis(connectionIdleTimeout);
         }
 
         public int getMaxConnections() {
@@ -254,20 +254,20 @@ public class AMQP10JMSProperties {
             this.maxConnections = maxConnections;
         }
 
-        public int getMaxSessionPerConnection() {
-            return this.maxSessionPerConnection;
+        public int getMaxSessionsPerConnection() {
+            return this.maxSessionsPerConnection;
         }
 
-        public void setMaxSessionPerConnection(int maxSessionPerConnection) {
-            this.maxSessionPerConnection = maxSessionPerConnection;
+        public void setMaxSessionsPerConnection(int maxSessionPerConnection) {
+            this.maxSessionsPerConnection = maxSessionPerConnection;
         }
 
         public Duration getConnectionCheckInterval() {
             return this.connectionCheckInterval;
         }
 
-        public void setConnectionCheckInterval(Duration connectionCheckInterval) {
-            this.connectionCheckInterval = connectionCheckInterval;
+        public void setConnectionCheckInterval(long connectionCheckInterval) {
+            this.connectionCheckInterval = Duration.ofMillis(connectionCheckInterval);
         }
 
         public boolean isUseAnonymousProducers() {
@@ -307,7 +307,7 @@ public class AMQP10JMSProperties {
             }
             factory.setExplicitProducerCacheSize(getExplicitProducerCacheSize());
             factory.setMaxConnections(getMaxConnections());
-            factory.setMaxSessionsPerConnection(getMaxSessionPerConnection());
+            factory.setMaxSessionsPerConnection(getMaxSessionsPerConnection());
             factory.setUseAnonymousProducers(isUseAnonymousProducers());
             factory.setUseProviderJMSContext(isUseProviderJMSContext());
         }
