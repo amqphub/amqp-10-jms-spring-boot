@@ -16,6 +16,9 @@
  */
 package org.amqphub.spring.boot.jms.autoconfigure;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.apache.qpid.jms.policy.JmsDefaultDeserializationPolicy;
 import org.slf4j.Logger;
@@ -33,6 +36,8 @@ public class AMQP10JMSConnectionFactoryFactory {
 
     private final AMQP10JMSProperties properties;
 
+    private final List<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers;
+
     /**
      * Creates a new QpidJMSConnectionFactoryFactory instance
      *
@@ -40,8 +45,21 @@ public class AMQP10JMSConnectionFactoryFactory {
      *      The QpidJMSProperties to use when building new factories.
      */
     public AMQP10JMSConnectionFactoryFactory(AMQP10JMSProperties properties) {
+        this(properties, null);
+    }
+
+    /**
+     * Creates a new QpidJMSConnectionFactoryFactory instance
+     *
+     * @param properties
+     *      The QpidJMSProperties to use when building new factories.
+     * @param factoryCustomizers
+     *      Optional list of customizers used to let users override configuration settings.
+     */
+    public AMQP10JMSConnectionFactoryFactory(AMQP10JMSProperties properties, List<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers) {
         Assert.notNull(properties, "Properties must not be null");
         this.properties = properties;
+        this.factoryCustomizers = (factoryCustomizers != null ? factoryCustomizers : Collections.emptyList());
     }
 
     /**
@@ -77,6 +95,10 @@ public class AMQP10JMSConnectionFactoryFactory {
 
             configureDeserializationPolicy(properties, factory);
 
+            // User callback point to allow for control over Qpid JMS ConnectionFactory
+            // configuration that overrides the properties previously set
+            customizeFactoryConfiguration(factory);
+
             return factory;
         } catch (Exception ex) {
             LOG.error("Exception while createing the AMQP 1.0 JMS Connection Factory.", ex);
@@ -97,6 +119,12 @@ public class AMQP10JMSConnectionFactoryFactory {
         if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getBlackList())) {
             deserializationPolicy.setBlackList(StringUtils.collectionToCommaDelimitedString(
                     properties.getDeserializationPolicy().getBlackList()));
+        }
+    }
+
+    private void customizeFactoryConfiguration(JmsConnectionFactory connectionFactory) {
+        for (AMQP10JMSConnectionFactoryCustomizer factoryCustomizer : this.factoryCustomizers) {
+            factoryCustomizer.customize(connectionFactory);
         }
     }
 }

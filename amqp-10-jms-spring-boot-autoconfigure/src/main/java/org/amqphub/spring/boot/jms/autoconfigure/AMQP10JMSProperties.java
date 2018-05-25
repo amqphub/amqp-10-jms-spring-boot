@@ -16,8 +16,10 @@
  */
 package org.amqphub.spring.boot.jms.autoconfigure;
 
+import java.time.Duration;
 import java.util.List;
 
+import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -32,7 +34,7 @@ public class AMQP10JMSProperties {
     private String remoteUrl = "amqp://localhost:5672";
 
     /**
-     * AMQP broker username.
+     * AMQP broker user name.
      */
     private String username;
 
@@ -58,6 +60,8 @@ public class AMQP10JMSProperties {
     private boolean receiveNoWaitLocalOnly = false;
 
     private final DeserializationPolicy deserializationPolicy = new DeserializationPolicy();
+
+    private Pool pool = new Pool();
 
     public String getRemoteUrl() {
         return remoteUrl;
@@ -111,6 +115,14 @@ public class AMQP10JMSProperties {
         return deserializationPolicy;
     }
 
+    public Pool getPool() {
+        return pool;
+    }
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
     public static class DeserializationPolicy {
 
         /**
@@ -138,6 +150,166 @@ public class AMQP10JMSProperties {
 
         public void setBlackList(List<String> blackList) {
             this.blackList = blackList;
+        }
+    }
+
+    public static class Pool {
+
+        /**
+         * Whether a JmsPoolConnectionFactory should be created and used to wrap the
+         * Qpid JMS ConnectionFactory.
+         */
+        private boolean enabled;
+
+        /**
+         * Whether to block when a Session is requested and the Session pool is full. Set it to
+         * false to throw a "JMSException" instead.
+         */
+        private boolean blockIfSessionPoolIsFull = true;
+
+        /**
+         * Blocking period before throwing an exception if the Session pool is still full and the
+         * blockIfSessionPoolIsFull configuration option is set to 'true'
+         */
+        private Duration blockIfSessionPoolIsFullTimeout = Duration.ofMillis(-1);
+
+        /**
+         * Connection idle timeout for connections that are not currently in use.
+         */
+        private Duration connectionIdleTimeout = Duration.ofSeconds(30);
+
+        /**
+         * Maximum number of pooled connections.
+         */
+        private int maxConnections = 1;
+
+        /**
+         * Maximum number of sessions allowed for each connection in the pool.
+         */
+        private int maxSessionPerConnection = 500;
+
+        /**
+         * Time to sleep between runs of the connection check thread whcih will only
+         * run if the configuration value is non-negative.
+         */
+        private Duration connectionCheckInterval = Duration.ofMillis(-1);
+
+        /**
+         * Whether to use only one anonymous "MessageProducer" instance. Set it to false
+         * to create one "MessageProducer" every time one is required.
+         */
+        private boolean useAnonymousProducers = true;
+
+        /**
+         * When the useAnonymousProducers option is disabled this option controls whether a
+         * pooled session will cache some number of explicit JMS producers in an LRUCache.
+         */
+        private int explicitProducerCacheSize = 0;
+
+        /**
+         * Controls whether the pool will use a generic JMSContext that wraps a pooled Connection or
+         * uses the provider JMS ConnectionFactory to directly create JMSContext instances.  The generic
+         * JMSContext object cannot fully implement all methods of the simplified API and must be disabled
+         * in the case where those methods are needed.
+         */
+        private boolean useProviderJMSContext = false;
+
+        public boolean isEnabled() {
+            return this.enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public boolean isBlockIfSessionPoolIsFull() {
+            return this.blockIfSessionPoolIsFull;
+        }
+
+        public void setBlockIfSessionPoolIsFull(boolean blockIfSessionPoolIsFull) {
+            this.blockIfSessionPoolIsFull = blockIfSessionPoolIsFull;
+        }
+
+        public Duration getBlockIfSessionPoolIsFullTimeout() {
+            return this.blockIfSessionPoolIsFullTimeout;
+        }
+
+        public void setBlockIfSessionPoolIsFullTimeout(Duration blockIfSessionPoolIsFullTimeout) {
+            this.blockIfSessionPoolIsFullTimeout = blockIfSessionPoolIsFullTimeout;
+        }
+
+        public Duration getConnectionIdleTimeout() {
+            return this.connectionIdleTimeout;
+        }
+
+        public void setConnectionIdleTimeout(Duration connectionIdleTimeout) {
+            this.connectionIdleTimeout = connectionIdleTimeout;
+        }
+
+        public int getMaxConnections() {
+            return this.maxConnections;
+        }
+
+        public void setMaxConnections(int maxConnections) {
+            this.maxConnections = maxConnections;
+        }
+
+        public int getMaxSessionPerConnection() {
+            return this.maxSessionPerConnection;
+        }
+
+        public void setMaxSessionPerConnection(int maxSessionPerConnection) {
+            this.maxSessionPerConnection = maxSessionPerConnection;
+        }
+
+        public Duration getConnectionCheckInterval() {
+            return this.connectionCheckInterval;
+        }
+
+        public void setConnectionCheckInterval(Duration connectionCheckInterval) {
+            this.connectionCheckInterval = connectionCheckInterval;
+        }
+
+        public boolean isUseAnonymousProducers() {
+            return this.useAnonymousProducers;
+        }
+
+        public void setUseAnonymousProducers(boolean useAnonymousProducers) {
+            this.useAnonymousProducers = useAnonymousProducers;
+        }
+
+        public boolean isUseProviderJMSContext() {
+            return useProviderJMSContext;
+        }
+
+        public void setUseProviderJMSContext(boolean useProviderJMSContext) {
+            this.useProviderJMSContext = useProviderJMSContext;
+        }
+
+        public int getExplicitProducerCacheSize() {
+            return explicitProducerCacheSize;
+        }
+
+        public void setExplicitProducerCacheSize(int explicitProducerCacheSize) {
+            this.explicitProducerCacheSize = explicitProducerCacheSize;
+        }
+
+        public void configurePooledFactory(JmsPoolConnectionFactory factory) {
+            factory.setBlockIfSessionPoolIsFull(isBlockIfSessionPoolIsFull());
+            if (getBlockIfSessionPoolIsFullTimeout() != null) {
+                factory.setBlockIfSessionPoolIsFullTimeout(getBlockIfSessionPoolIsFullTimeout().toMillis());
+            }
+            if (getConnectionCheckInterval() != null) {
+                factory.setConnectionCheckInterval(getConnectionCheckInterval().toMillis());
+            }
+            if (getConnectionIdleTimeout() != null) {
+                factory.setConnectionIdleTimeout((int) getConnectionIdleTimeout().toMillis());
+            }
+            factory.setExplicitProducerCacheSize(getExplicitProducerCacheSize());
+            factory.setMaxConnections(getMaxConnections());
+            factory.setMaxSessionsPerConnection(getMaxSessionPerConnection());
+            factory.setUseAnonymousProducers(isUseAnonymousProducers());
+            factory.setUseProviderJMSContext(isUseProviderJMSContext());
         }
     }
 }

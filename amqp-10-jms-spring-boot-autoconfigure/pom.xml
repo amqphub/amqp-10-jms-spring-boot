@@ -44,9 +44,15 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-    <groupId>org.apache.qpid</groupId>
+      <groupId>org.apache.qpid</groupId>
       <artifactId>qpid-jms-client</artifactId>
       <version>${qpid-jms-version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.messaginghub</groupId>
+      <artifactId>pooled-jms</artifactId>
+      <version>${pooled-jms-version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
