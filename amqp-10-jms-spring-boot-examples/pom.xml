@@ -33,6 +33,7 @@
     <module>amqp-10-jms-spring-boot-hello-world</module>
     <module>amqp-10-jms-spring-boot-custom-configuration</module>
     <module>amqp-10-jms-spring-boot-simple-container-factory</module>
+    <module>amqp-10-jms-spring-boot-pooled-connection</module>
   </modules>
 
   <build>
