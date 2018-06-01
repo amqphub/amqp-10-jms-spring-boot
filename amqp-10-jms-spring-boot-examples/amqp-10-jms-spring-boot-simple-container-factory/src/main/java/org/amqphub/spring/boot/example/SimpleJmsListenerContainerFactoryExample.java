@@ -18,7 +18,6 @@ package org.amqphub.spring.boot.example;
 
 import javax.jms.ConnectionFactory;
 
-import org.apache.qpid.jms.JmsConnectionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -42,9 +41,10 @@ public class SimpleJmsListenerContainerFactoryExample {
     @Bean(name = "QpidJMSContainerFactory")
     public JmsListenerContainerFactory<?> queue(ConnectionFactory cf) {
         SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
-        JmsConnectionFactory qpidCF = (JmsConnectionFactory) cf;
 
-        factory.setConnectionFactory(qpidCF);
+        // Configure the factory using the provided JMS ConnectionFactory and apply
+        // application defined configuration to the SimpleJmsListenerContainerFactory
+        factory.setConnectionFactory(cf);
         factory.setSessionTransacted(false);
 
         return factory;
