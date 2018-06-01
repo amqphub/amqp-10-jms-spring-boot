@@ -33,7 +33,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <start-class>org.amqphub.spring.boot.jms.example.AMQP10JMSSpringBootSimpleJmsListenerContainerFactory</start-class>
+    <start-class>org.amqphub.spring.boot.jms.example.SimpleJmsListenerContainerFactoryExample</start-class>
     <java.version>1.8</java.version>
   </properties>
 

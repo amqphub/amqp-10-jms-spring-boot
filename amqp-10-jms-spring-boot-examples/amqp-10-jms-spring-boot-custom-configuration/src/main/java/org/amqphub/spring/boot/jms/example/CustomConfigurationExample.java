@@ -25,14 +25,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 
 /**
- * Simple Hello World example that sends and receives a message
+ * Example showing how to customize the configuration of the ConnectionFactory being
+ * used in the application.
  */
 @SpringBootApplication
 @EnableJms
-public class AMQP10JMSSpringBootCustomConfiguration {
+public class CustomConfigurationExample {
 
     public static void main(String[] args) {
-        SpringApplication.run(AMQP10JMSSpringBootCustomConfiguration.class, args);
+        SpringApplication.run(CustomConfigurationExample.class, args);
     }
 
     /**

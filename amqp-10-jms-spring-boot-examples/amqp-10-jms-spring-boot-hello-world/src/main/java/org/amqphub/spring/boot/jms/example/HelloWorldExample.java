@@ -25,9 +25,9 @@ import org.springframework.jms.annotation.EnableJms;
  */
 @SpringBootApplication
 @EnableJms
-public class AMQP10JMSSpringBootHelloWorld {
+public class HelloWorldExample {
 
     public static void main(String[] args) {
-        SpringApplication.run(AMQP10JMSSpringBootHelloWorld.class, args);
+        SpringApplication.run(HelloWorldExample.class, args);
     }
 }

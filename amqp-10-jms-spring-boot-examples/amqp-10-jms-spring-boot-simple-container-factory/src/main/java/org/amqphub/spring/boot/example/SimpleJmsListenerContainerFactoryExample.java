@@ -16,18 +16,37 @@
  */
 package org.amqphub.spring.boot.example;
 
+import javax.jms.ConnectionFactory;
+
+import org.apache.qpid.jms.JmsConnectionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.config.JmsListenerContainerFactory;
+import org.springframework.jms.config.SimpleJmsListenerContainerFactory;
 
 /**
- * Simple Hello World example that sends and receives a message
+ * Simple example showing how to use the Spring {@link SimpleJmsListenerContainerFactory}
+ * instead of the default {@link DefaultJmsListenerContainerFactory}
  */
 @SpringBootApplication
 @EnableJms
-public class AMQP10JMSSpringBootPooledConnection {
+public class SimpleJmsListenerContainerFactoryExample {
 
     public static void main(String[] args) {
-        SpringApplication.run(AMQP10JMSSpringBootPooledConnection.class, args);
+        SpringApplication.run(SimpleJmsListenerContainerFactoryExample.class, args);
+    }
+
+    @Bean(name = "QpidJMSContainerFactory")
+    public JmsListenerContainerFactory<?> queue(ConnectionFactory cf) {
+        SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
+        JmsConnectionFactory qpidCF = (JmsConnectionFactory) cf;
+
+        factory.setConnectionFactory(qpidCF);
+        factory.setSessionTransacted(false);
+
+        return factory;
     }
 }

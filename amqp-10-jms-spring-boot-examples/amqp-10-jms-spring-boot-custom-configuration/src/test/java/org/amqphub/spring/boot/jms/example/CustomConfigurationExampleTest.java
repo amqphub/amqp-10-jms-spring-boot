@@ -14,17 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.amqphub.spring.boot.example;
+package org.amqphub.spring.boot.jms.example;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jms.JMSException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
+import org.apache.activemq.filter.DestinationMapEntry;
+import org.apache.activemq.security.AuthenticationUser;
+import org.apache.activemq.security.AuthorizationEntry;
+import org.apache.activemq.security.AuthorizationPlugin;
+import org.apache.activemq.security.DefaultAuthorizationMap;
+import org.apache.activemq.security.SimpleAuthenticationPlugin;
+import org.apache.activemq.security.TempDestinationAuthorizationEntry;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -41,15 +52,15 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AMQP10JMSSpringBootPooledConnectionTest {
+public class CustomConfigurationExampleTest {
 
     private static BrokerService brokerService;
 
     @Autowired
-    public PooledMessageConsumer consumer;
+    public CustomConfiguredMessageConsumer consumer;
 
     @Autowired
-    public PooledMessageProducer producer;
+    public CustomConfigredMessageProducer producer;
 
     @Rule
     public TestName name = new TestName();
@@ -62,6 +73,16 @@ public class AMQP10JMSSpringBootPooledConnectionTest {
         brokerService.setPersistent(false);
         brokerService.getManagementContext().setCreateConnector(false);
 
+        ArrayList<BrokerPlugin> plugins = new ArrayList<BrokerPlugin>();
+
+        List<AuthenticationUser> users = new ArrayList<AuthenticationUser>();
+        users.add(new AuthenticationUser("admin", "admin", "admins"));
+
+        SimpleAuthenticationPlugin authenticationPlugin = new SimpleAuthenticationPlugin(users);
+        plugins.add(authenticationPlugin);
+        plugins.add(configureAuthorization());
+
+        brokerService.setPlugins(plugins.toArray(new BrokerPlugin[2]));
         brokerService.start();
         brokerService.waitUntilStarted();
     }
@@ -76,12 +97,9 @@ public class AMQP10JMSSpringBootPooledConnectionTest {
     public void testMessageIsSent() throws Exception {
         producer.sendMessage("Hello: " + name.getMethodName());
 
-        // Should have our send plus the one's sent by the run of MessageProducer by Spring
+        // Should have our send plus the one sent by the run of MessageProducer by Spring
         QueueViewMBean queueView = getProxyToQueue("example");
-        assertEquals(20, queueView.getEnqueueCount());
-
-        BrokerViewMBean brokerView = getProxyToBroker();
-        assertEquals(1, brokerView.getCurrentConnectionsCount());
+        assertEquals(2, queueView.getEnqueueCount());
     }
 
     protected BrokerViewMBean getProxyToBroker() throws MalformedObjectNameException, JMSException {
@@ -97,5 +115,35 @@ public class AMQP10JMSSpringBootPooledConnectionTest {
         QueueViewMBean proxy = (QueueViewMBean) brokerService.getManagementContext()
                 .newProxyInstance(queueViewMBeanName, QueueViewMBean.class, true);
         return proxy;
+    }
+
+    protected static BrokerPlugin configureAuthorization() throws Exception {
+
+        @SuppressWarnings("rawtypes")
+        List<DestinationMapEntry> authorizationEntries = new ArrayList<DestinationMapEntry>();
+
+        AuthorizationEntry entry = new AuthorizationEntry();
+        entry.setQueue(">");
+        entry.setRead("admins,anonymous");
+        entry.setWrite("admins,anonymous");
+        entry.setAdmin("admins,anonymous");
+        authorizationEntries.add(entry);
+        entry = new AuthorizationEntry();
+        entry.setTopic(">");
+        entry.setRead("admins,anonymous");
+        entry.setWrite("admins,anonymous");
+        entry.setAdmin("admins,anonymous");
+        authorizationEntries.add(entry);
+
+        TempDestinationAuthorizationEntry tempEntry = new TempDestinationAuthorizationEntry();
+        tempEntry.setRead("admins,anonymous");
+        tempEntry.setWrite("admins,anonymous");
+        tempEntry.setAdmin("admins,anonymous");
+
+        DefaultAuthorizationMap authorizationMap = new DefaultAuthorizationMap(authorizationEntries);
+        authorizationMap.setTempDestinationAuthorizationEntry(tempEntry);
+        AuthorizationPlugin authorizationPlugin = new AuthorizationPlugin(authorizationMap);
+
+        return authorizationPlugin;
     }
 }

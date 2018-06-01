@@ -31,7 +31,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <start-class>org.amqphub.spring.boot.jms.example.AMQP10JMSSpringBootPooledConnection</start-class>
+    <start-class>org.amqphub.spring.boot.jms.example.PooledConnectionExample</start-class>
     <java.version>1.8</java.version>
   </properties>
 
