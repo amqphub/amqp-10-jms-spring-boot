@@ -50,7 +50,7 @@ Spring Boot project.
 
 #### JMS Connection Configuration
 
-+ **amqphub.amqp10jms.remote-url**  The URL that the AMQP JMS client should use when it attempts to establish a new connection to a remote AMQP peer.
++ **amqphub.amqp10jms.remote-url** The URL that the AMQP JMS client should use when it attempts to establish a new connection to a remote AMQP peer.
 
 The basic format of the clients Connection URI is as follows:
 
@@ -65,7 +65,7 @@ TLS SNI (Server Name Indication) extension in order to communicate the desired s
 The SNI extension will be automatically included if a Fully Qualified name (e.g myhost.mydomain) is specified, but not
 when an unqualified name (e.g myhost) or bare IP address are used.
 
-The client can be configured with a number of different settings using the URI while defining the ConnectionFactory.
+The client can be configured with a number of different settings using the URI while defining the ConnectionFactory and some commonly used options can be configured directly in the application properties.
 
 + **amqphub.amqp10jms.username** User name value used to authenticate the connection
 + **amqphub.amqp10jms.password** The password value used to authenticate the connection
@@ -73,3 +73,15 @@ The client can be configured with a number of different settings using the URI w
 + **amqphub.amqp10jms.receiveLocalOnly** If enabled receive calls with a timeout will only check a consumers local message buffer, otherwise the remote peer is checked to ensure there are really no messages available if the local timeout expires before a message arrives. Default is false, the remote is checked.
 + **amqphub.amqp10jms.receiveNoWaitLocalOnly**  If enabled receiveNoWait calls will only check a consumers local message buffer, otherwise the remote peer is checked to ensure there are really no messages available. Default is false, the remote is checked.
 
+#### Connection Pooling Options
+
++ **amqphub.amqp10jms.pool.enabled** Controls whether connection pooling is enabled or not (default is false) set to true to enable pooling.
++ **amqphub.amqp10jms.pool.maxConnections** The maximum number of pooled connections to allow.
++ **amqphub.amqp10jms.pool.maxSessionsPerConnection** The maximum number of sessions for each connection. The default is 500. A negative value removes any limit.
++ **amqphub.amqp10jms.pool.blockIfSessionPoolIsFull** If enabled, block createSession() until a session becomes available in the pool. It is enabled by default.
++ **amqphub.amqp10jms.pool.blockIfSessionPoolIsFullTimeout** The time in milliseconds before a blocked call to createSession() throws an IllegalStateException. The default is -1, meaning the call blocks forever.
++ **amqphub.amqp10jms.pool.connectionIdleTimeout** The time in milliseconds before a connection not currently on loan can be evicted from the pool. The default is 30 seconds. A value of 0 disables the timeout.
++ **amqphub.amqp10jms.pool.connectionCheckInterval** The time in milliseconds between periodic checks for expired connections. The default is 0, meaning the check is disabled.
++ **amqphub.amqp10jms.pool.useAnonymousProducers** If enabled, use a single anonymous JMS MessageProducer for all calls to createProducer(). It is enabled by default.
++ **amqphub.amqp10jms.pool.explicitProducerCacheSize** When not using anonymous producers the Session can be configured to cache a certain number of explicit Destination MessageProducers.  As new producers are created that do not match the cached producers the oldest entry in the cache is evicted.
++ **amqphub.amqp10jms.pool.useProviderJMSContext** If enabled, use the JMSContext classes of the underlying JMS provider. It is disabled by default.
