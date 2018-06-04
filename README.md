@@ -82,3 +82,7 @@ The client can be configured with a number of different settings using the URI w
 + **amqphub.amqp10jms.pool.useAnonymousProducers** If enabled, use a single anonymous JMS MessageProducer for all calls to createProducer(). It is enabled by default.
 + **amqphub.amqp10jms.pool.explicitProducerCacheSize** When not using anonymous producers the Session can be configured to cache a certain number of explicit Destination MessageProducers.  As new producers are created that do not match the cached producers the oldest entry in the cache is evicted.
 + **amqphub.amqp10jms.pool.useProviderJMSContext** If enabled, use the JMSContext classes of the underlying JMS provider. It is disabled by default.
+
+## Continuous Integration
+
+[![Build Status](https://travis-ci.org/amqphub/amqp-10-jms-spring-boot.svg?branch=master)](https://travis-ci.org/amqphub/amqp-10-jms-spring-boot)
