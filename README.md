@@ -60,12 +60,9 @@ or for WebSocket connections:
 
      amqpws[s]://hostname:port[/path][?option=value[&option2=value...]]
 
-Where the *amqps* and *amqpwss* scheme is specified to use SSL/TLS, the hostname segment from the URI can be used by the JVM for the
-TLS SNI (Server Name Indication) extension in order to communicate the desired server hostname during a TLS handshake.
-The SNI extension will be automatically included if a Fully Qualified name (e.g myhost.mydomain) is specified, but not
-when an unqualified name (e.g myhost) or bare IP address are used.
+Where the *amqps* and *amqpwss* scheme is specified to use SSL/TLS, the hostname segment from the URI can be used by the JVM for the TLS SNI (Server Name Indication) extension in order to communicate the desired server hostname during a TLS handshake. The SNI extension will be automatically included if a Fully Qualified name (e.g myhost.mydomain) is specified, but not when an unqualified name (e.g myhost) or bare IP address are used.
 
-The client can be configured with a number of different settings using the URI while defining the ConnectionFactory and some commonly used options can be configured directly in the application properties.
+The client can be configured with a number of different settings using the URI while defining the ConnectionFactory and some commonly used options can be configured directly in the application properties.  For a complete overview of the various configuration options available on the connection URI refer to the [Qpid JMS client documentation](http://qpid.apache.org/components/jms/index.html)
 
 + **amqphub.amqp10jms.username** User name value used to authenticate the connection
 + **amqphub.amqp10jms.password** The password value used to authenticate the connection
