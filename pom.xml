@@ -55,7 +55,7 @@
   </developers>
 
   <properties>
-    <qpid-jms-version>0.32.0</qpid-jms-version>
+    <qpid-jms-version>0.35.0</qpid-jms-version>
     <pooled-jms-version>1.0.1</pooled-jms-version>
 
     <apache-rat-version>0.12</apache-rat-version>
@@ -69,7 +69,7 @@
     <maven-gpg-plugin-version>1.6</maven-gpg-plugin-version>
     <maven-eclipse-plugin-version>2.10</maven-eclipse-plugin-version>
     <maven-idea-plugin-version>2.2.1</maven-idea-plugin-version>
-    <maven-surefire-plugin-version>2.21.0</maven-surefire-plugin-version>
+    <maven-surefire-plugin-version>2.22.0</maven-surefire-plugin-version>
     <maven-release-plugin-version>2.5.3</maven-release-plugin-version>
     <nexus-staging-maven-plugin-version>1.6.8</nexus-staging-maven-plugin-version>
 
