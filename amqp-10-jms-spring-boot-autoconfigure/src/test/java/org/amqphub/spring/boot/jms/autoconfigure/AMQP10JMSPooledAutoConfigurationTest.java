@@ -28,7 +28,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
-import org.springframework.boot.test.util.EnvironmentTestUtils;
+import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
@@ -122,7 +122,10 @@ public class AMQP10JMSPooledAutoConfigurationTest {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         applicationContext.register(config);
         applicationContext.register(AMQP10JMSAutoConfiguration.class, JmsAutoConfiguration.class);
-        EnvironmentTestUtils.addEnvironment(applicationContext, environment);
+
+        TestPropertyValues.of(environment)
+                .applyTo(applicationContext);
+
         applicationContext.refresh();
         this.context = applicationContext;
     }
