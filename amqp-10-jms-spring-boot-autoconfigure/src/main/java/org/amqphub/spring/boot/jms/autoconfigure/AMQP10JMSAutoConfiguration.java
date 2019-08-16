@@ -26,6 +26,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.JndiConnectionFactoryAutoConfiguration;
@@ -40,6 +41,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @AutoConfigureBefore(JmsAutoConfiguration.class)
 @AutoConfigureAfter({JndiConnectionFactoryAutoConfiguration.class})
+@ConditionalOnMissingBean(ConnectionFactory.class)
 @ConditionalOnClass({ConnectionFactory.class, JmsConnectionFactory.class})
 @EnableConfigurationProperties(AMQP10JMSProperties.class)
 public class AMQP10JMSAutoConfiguration {
