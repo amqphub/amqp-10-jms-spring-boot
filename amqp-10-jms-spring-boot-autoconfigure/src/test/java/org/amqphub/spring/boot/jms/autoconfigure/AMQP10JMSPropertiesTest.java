@@ -16,16 +16,16 @@
  */
 package org.amqphub.spring.boot.jms.autoconfigure;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.apache.qpid.jms.policy.JmsDefaultDeserializationPolicy;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for AMQP 1.0 JMS Properties object.

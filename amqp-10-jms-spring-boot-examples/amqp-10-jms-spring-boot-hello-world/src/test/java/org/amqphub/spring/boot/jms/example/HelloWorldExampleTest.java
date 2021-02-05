@@ -16,7 +16,7 @@
  */
 package org.amqphub.spring.boot.jms.example;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.jms.JMSException;
 import javax.management.MalformedObjectNameException;
@@ -25,21 +25,17 @@ import javax.management.ObjectName;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Simple Hello World example that sends and receives a message using both the
  * Hello World Command Line instance and a manual call to show either can work.
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class HelloWorldExampleTest {
 
@@ -51,10 +47,7 @@ public class HelloWorldExampleTest {
     @Autowired
     public HelloWorldMessageProducer producer;
 
-    @Rule
-    public TestName name = new TestName();
-
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         brokerService = new BrokerService();
 
@@ -66,15 +59,15 @@ public class HelloWorldExampleTest {
         brokerService.waitUntilStarted();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws Exception {
         brokerService.stop();
         brokerService.waitUntilStopped();
     }
 
     @Test
-    public void testMessageIsSent() throws Exception {
-        producer.sendMessage("Hello: " + name.getMethodName());
+    public void testMessageIsSent(TestInfo info) throws Exception {
+        producer.sendMessage("Hello: " + info.getDisplayName());
 
         // Should have our send plus the one sent by the run of MessageProducer by Spring
         QueueViewMBean queueView = getProxyToQueue("example");

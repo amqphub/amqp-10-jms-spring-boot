@@ -112,12 +112,12 @@ public class AMQP10JMSConnectionFactoryFactory {
             (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
 
         if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getWhiteList())) {
-            deserializationPolicy.setWhiteList(StringUtils.collectionToCommaDelimitedString(
+            deserializationPolicy.setAllowList(StringUtils.collectionToCommaDelimitedString(
                     properties.getDeserializationPolicy().getWhiteList()));
         }
 
         if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getBlackList())) {
-            deserializationPolicy.setBlackList(StringUtils.collectionToCommaDelimitedString(
+            deserializationPolicy.setDenyList(StringUtils.collectionToCommaDelimitedString(
                     properties.getDeserializationPolicy().getBlackList()));
         }
     }

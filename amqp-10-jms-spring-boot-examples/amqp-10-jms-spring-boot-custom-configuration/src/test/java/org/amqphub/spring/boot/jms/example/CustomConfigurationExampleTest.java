@@ -16,7 +16,7 @@
  */
 package org.amqphub.spring.boot.jms.example;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,21 +36,18 @@ import org.apache.activemq.security.AuthorizationPlugin;
 import org.apache.activemq.security.DefaultAuthorizationMap;
 import org.apache.activemq.security.SimpleAuthenticationPlugin;
 import org.apache.activemq.security.TempDestinationAuthorizationEntry;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Simple Hello World example that sends and receives a message using both the
  * Hello World Command Line instance and a manual call to show either can work.
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class CustomConfigurationExampleTest {
 
@@ -62,10 +59,14 @@ public class CustomConfigurationExampleTest {
     @Autowired
     public CustomConfigredMessageProducer producer;
 
-    @Rule
-    public TestName name = new TestName();
+    public TestInfo name;
 
-    @BeforeClass
+    @BeforeEach
+    public void initialize(TestInfo info) {
+        name = info;
+    }
+
+    @BeforeAll
     public static void setUp() throws Exception {
         brokerService = new BrokerService();
 
@@ -87,7 +88,7 @@ public class CustomConfigurationExampleTest {
         brokerService.waitUntilStarted();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws Exception {
         brokerService.stop();
         brokerService.waitUntilStopped();
@@ -95,7 +96,7 @@ public class CustomConfigurationExampleTest {
 
     @Test
     public void testMessageIsSent() throws Exception {
-        producer.sendMessage("Hello: " + name.getMethodName());
+        producer.sendMessage("Hello: " + name.getDisplayName());
 
         // Should have our send plus the one sent by the run of MessageProducer by Spring
         QueueViewMBean queueView = getProxyToQueue("example");

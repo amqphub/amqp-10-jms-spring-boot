@@ -16,15 +16,15 @@
  */
 package org.amqphub.spring.boot.jms.autoconfigure;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.jms.ConnectionFactory;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -38,7 +38,7 @@ public class AMQP10JMSAutoConfigurationTest {
 
     private AnnotationConfigApplicationContext context;
 
-    @After
+    @AfterEach
     public void tearDown() {
         if (this.context != null) {
             this.context.close();
