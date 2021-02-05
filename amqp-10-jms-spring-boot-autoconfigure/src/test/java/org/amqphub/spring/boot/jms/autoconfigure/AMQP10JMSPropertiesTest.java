@@ -58,7 +58,7 @@ public class AMQP10JMSPropertiesTest {
 
         JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
 
-        assertEquals(1, policy.getWhiteList().length());
+        assertEquals(1, policy.getAllowList().length());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class AMQP10JMSPropertiesTest {
 
         JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
 
-        assertEquals(0, policy.getBlackList().length());
+        assertEquals(0, policy.getDenyList().length());
     }
 
     @Test
@@ -90,8 +90,8 @@ public class AMQP10JMSPropertiesTest {
 
         JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
 
-        assertEquals("org.apache.qpid.proton.*", policy.getWhiteList());
-        assertEquals("org.apache.activemq..*", policy.getBlackList());
+        assertEquals("org.apache.qpid.proton.*", policy.getAllowList());
+        assertEquals("org.apache.activemq..*", policy.getDenyList());
     }
 
     @Test
