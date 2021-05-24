@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.amqphub.spring</groupId>
     <artifactId>amqp-10-jms-spring-boot-examples</artifactId>
-    <version>2.5.0</version>
+    <version>2.5.1-SNAPSHOT</version>
   </parent>
   <artifactId>amqp-10-jms-spring-boot-pooled-connection</artifactId>
   <packaging>jar</packaging>
