@@ -16,9 +16,9 @@
  */
 package org.amqphub.spring.boot.jms.autoconfigure;
 
-import javax.jms.ConnectionFactory;
-
 import org.apache.qpid.jms.JmsConnectionFactory;
+
+import jakarta.jms.ConnectionFactory;
 
 /**
  * Functional interface that allows for user overrides of the configured options

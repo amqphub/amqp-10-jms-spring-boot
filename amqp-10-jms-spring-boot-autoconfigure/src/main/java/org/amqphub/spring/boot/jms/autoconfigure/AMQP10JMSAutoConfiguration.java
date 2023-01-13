@@ -18,8 +18,6 @@ package org.amqphub.spring.boot.jms.autoconfigure;
 
 import java.util.List;
 
-import javax.jms.ConnectionFactory;
-
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -33,6 +31,8 @@ import org.springframework.boot.autoconfigure.jms.JndiConnectionFactoryAutoConfi
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import jakarta.jms.ConnectionFactory;
 
 /**
  * Auto Configuration class for the AMQP 1.0 JMS client allowing for the addition

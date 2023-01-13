@@ -18,13 +18,9 @@ package org.amqphub.spring.boot.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.jms.JMSException;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-
-import org.apache.activemq.broker.BrokerService;
-import org.apache.activemq.broker.jmx.BrokerViewMBean;
-import org.apache.activemq.broker.jmx.QueueViewMBean;
+import org.apache.activemq.artemis.api.core.SimpleString;
+import org.apache.activemq.artemis.core.server.Queue;
+import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -39,7 +35,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class SimpleJmsListenerContainerFactoryExampleTest {
 
-    private static BrokerService brokerService;
+    private static EmbeddedActiveMQ server;
 
     @Autowired
     public SimpleJmsListenerContainerFactoryMessageConsumer consumer;
@@ -49,20 +45,13 @@ public class SimpleJmsListenerContainerFactoryExampleTest {
 
     @BeforeAll
     public static void setUp() throws Exception {
-        brokerService = new BrokerService();
-
-        brokerService.addConnector("amqp://localhost:5672");
-        brokerService.setPersistent(false);
-        brokerService.getManagementContext().setCreateConnector(false);
-
-        brokerService.start();
-        brokerService.waitUntilStarted();
+        server = new EmbeddedActiveMQ();
+        server.start();
     }
 
     @AfterAll
     public static void tearDown() throws Exception {
-        brokerService.stop();
-        brokerService.waitUntilStopped();
+        server.stop();
     }
 
     @Test
@@ -70,22 +59,11 @@ public class SimpleJmsListenerContainerFactoryExampleTest {
         producer.sendMessage("Hello: " + info.getDisplayName());
 
         // Should have our send plus the one sent by the run of MessageProducer by Spring
-        QueueViewMBean queueView = getProxyToQueue("example");
-        assertEquals(2, queueView.getEnqueueCount());
+        Queue queueView = getProxyToQueue("example");
+        assertEquals(2, queueView.getMessagesAcknowledged());
     }
 
-    protected BrokerViewMBean getProxyToBroker() throws MalformedObjectNameException, JMSException {
-        ObjectName brokerViewMBean = new ObjectName(
-            "org.apache.activemq:type=Broker,brokerName=localhost");
-        BrokerViewMBean proxy = (BrokerViewMBean) brokerService.getManagementContext()
-                .newProxyInstance(brokerViewMBean, BrokerViewMBean.class, true);
-        return proxy;
-    }
-
-    protected QueueViewMBean getProxyToQueue(String name) throws MalformedObjectNameException, JMSException {
-        ObjectName queueViewMBeanName = new ObjectName("org.apache.activemq:type=Broker,brokerName=localhost,destinationType=Queue,destinationName="+name);
-        QueueViewMBean proxy = (QueueViewMBean) brokerService.getManagementContext()
-                .newProxyInstance(queueViewMBeanName, QueueViewMBean.class, true);
-        return proxy;
-    }
+    public Queue getProxyToQueue(String queueName) {
+        return server.getActiveMQServer().locateQueue(SimpleString.toSimpleString(queueName));
+     }
 }
