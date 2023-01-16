@@ -66,6 +66,8 @@ public class CustomConfigurationExampleTest {
     public void testMessageIsSent() throws Exception {
         producer.sendMessage("Hello: " + name.getDisplayName());
 
+        Thread.sleep(50);
+
         // Should have our send plus the one sent by the run of MessageProducer by Spring
         Queue queueView = getProxyToQueue("example");
         assertEquals(2, queueView.getMessagesAcknowledged());

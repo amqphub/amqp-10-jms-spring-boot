@@ -19,8 +19,9 @@ package org.amqphub.spring.boot.jms.autoconfigure;
 import java.time.Duration;
 import java.util.List;
 
-import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
+import org.springframework.boot.autoconfigure.jms.JmsPoolConnectionFactoryProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * Configuration properties for the AMQP 1.0 JMS client
@@ -59,8 +60,10 @@ public class AMQP10JMSProperties {
      */
     private boolean receiveNoWaitLocalOnly = false;
 
+    @NestedConfigurationProperty
     private final DeserializationPolicy deserializationPolicy = new DeserializationPolicy();
 
+    @NestedConfigurationProperty
     private Pool pool = new Pool();
 
     public String getRemoteUrl() {
@@ -119,86 +122,47 @@ public class AMQP10JMSProperties {
         return pool;
     }
 
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
     public static class DeserializationPolicy {
 
         /**
-         * Whitelist of classes or packages.
+         * Allow-list of classes or packages.
          */
-        private List<String> whiteList;
+        private List<String> allowList;
 
         /**
-         * Blacklist of classes or packages. Blacklist overrides the whitelist, entries that could match both are
-         * counted as blacklisted.
+         * Deny-list of classes or packages. Deny-List overrides the Allow-list, entries that could match both are
+         * counted as denied.
          */
-        private List<String> blackList;
+        private List<String> denyList;
 
-        public List<String> getWhiteList() {
-            return this.whiteList;
+        public List<String> getAllowList() {
+            return this.allowList;
         }
 
-        public void setWhiteList(List<String> whiteList) {
-            this.whiteList = whiteList;
+        public void setAllowList(List<String> allowList) {
+            this.allowList = allowList;
         }
 
-        public List<String> getBlackList() {
-            return this.blackList;
+        @Deprecated
+        public void setWhiteList(List<String> allowList) {
+            this.allowList = allowList;
         }
 
-        public void setBlackList(List<String> blackList) {
-            this.blackList = blackList;
+        public List<String> getDenyList() {
+            return this.denyList;
+        }
+
+        public void setDenyList(List<String> denyList) {
+            this.denyList = denyList;
+        }
+
+        @Deprecated
+        public void setBlackList(List<String> denyList) {
+            this.denyList = denyList;
         }
     }
 
-    public static class Pool {
-
-        /**
-         * Whether a JmsPoolConnectionFactory should be created and used to wrap the
-         * Qpid JMS ConnectionFactory.
-         */
-        private boolean enabled;
-
-        /**
-         * Whether to block when a Session is requested and the Session pool is full. Set it to
-         * false to throw a "JMSException" instead.
-         */
-        private boolean blockIfSessionPoolIsFull = true;
-
-        /**
-         * Blocking period before throwing an exception if the Session pool is still full and the
-         * blockIfSessionPoolIsFull configuration option is set to 'true'
-         */
-        private Duration blockIfSessionPoolIsFullTimeout = Duration.ofMillis(-1);
-
-        /**
-         * Connection idle timeout for connections that are not currently in use.
-         */
-        private Duration connectionIdleTimeout = Duration.ofSeconds(30);
-
-        /**
-         * Maximum number of pooled connections.
-         */
-        private int maxConnections = 1;
-
-        /**
-         * Maximum number of sessions allowed for each connection in the pool.
-         */
-        private int maxSessionsPerConnection = 500;
-
-        /**
-         * Time to sleep between runs of the connection check thread whcih will only
-         * run if the configuration value is non-negative.
-         */
-        private Duration connectionCheckInterval = Duration.ofMillis(-1);
-
-        /**
-         * Whether to use only one anonymous "MessageProducer" instance. Set it to false
-         * to create one "MessageProducer" every time one is required.
-         */
-        private boolean useAnonymousProducers = true;
+    public static class Pool extends JmsPoolConnectionFactoryProperties {
 
         /**
          * When the useAnonymousProducers option is disabled this option controls whether a
@@ -214,68 +178,93 @@ public class AMQP10JMSProperties {
          */
         private boolean useProviderJMSContext = false;
 
-        public boolean isEnabled() {
-            return this.enabled;
-        }
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-
         public boolean isBlockIfSessionPoolIsFull() {
-            return this.blockIfSessionPoolIsFull;
+            return isBlockIfFull();
         }
 
+        /**
+         * Whether to block when a Session is requested and the Session pool is full. Set it to
+         * false to throw a "JMSException" instead.
+         *
+         * @param blockIfSessionPoolIsFull
+         *      If true the session API will block if it is full.
+         */
         public void setBlockIfSessionPoolIsFull(boolean blockIfSessionPoolIsFull) {
-            this.blockIfSessionPoolIsFull = blockIfSessionPoolIsFull;
+            this.setBlockIfFull(blockIfSessionPoolIsFull);
         }
 
         public Duration getBlockIfSessionPoolIsFullTimeout() {
-            return this.blockIfSessionPoolIsFullTimeout;
+            return getBlockIfFullTimeout();
         }
 
+        /**
+         * Blocking period before throwing an exception if the Session pool is still full and the
+         * blockIfSessionPoolIsFull configuration option is set to 'true'.
+         *
+         * @param blockIfSessionPoolIsFullTimeout
+         *      The duration to wait before throwing an error due to session pool being full.
+         */
         public void setBlockIfSessionPoolIsFullTimeout(long blockIfSessionPoolIsFullTimeout) {
-            this.blockIfSessionPoolIsFullTimeout = Duration.ofMillis(blockIfSessionPoolIsFullTimeout);
+            setBlockIfFullTimeout(Duration.ofMillis(blockIfSessionPoolIsFullTimeout));
+        }
+
+        /**
+         * Blocking period before throwing an exception if the Session pool is still full and the
+         * blockIfSessionPoolIsFull configuration option is set to 'true'.
+         *
+         * @param blockIfSessionPoolIsFullTimeout
+         *      The duration to wait before throwing an error due to session pool being full.
+         */
+        public void setBlockIfSessionPoolIsFullTimeout(Duration blockIfSessionPoolIsFullTimeout) {
+            setBlockIfFullTimeout(blockIfSessionPoolIsFullTimeout);
         }
 
         public Duration getConnectionIdleTimeout() {
-            return this.connectionIdleTimeout;
+            return getIdleTimeout();
         }
 
+        /**
+         * Connection idle timeout for connections that are not currently in use.
+         */
         public void setConnectionIdleTimeout(long connectionIdleTimeout) {
-            this.connectionIdleTimeout = Duration.ofMillis(connectionIdleTimeout);
+            setIdleTimeout(Duration.ofMillis(connectionIdleTimeout));
         }
 
-        public int getMaxConnections() {
-            return this.maxConnections;
+        /**
+         * Connection idle timeout for connections that are not currently in use.
+         */
+        public void setConnectionIdleTimeout(Duration connectionIdleTimeout) {
+            setIdleTimeout(connectionIdleTimeout);
         }
 
-        public void setMaxConnections(int maxConnections) {
-            this.maxConnections = maxConnections;
-        }
-
-        public int getMaxSessionsPerConnection() {
-            return this.maxSessionsPerConnection;
-        }
-
-        public void setMaxSessionsPerConnection(int maxSessionPerConnection) {
-            this.maxSessionsPerConnection = maxSessionPerConnection;
-        }
-
+        /**
+         * @return The time to sleep between runs of the connection check thread which will only
+         * run if the configuration value is non-negative.
+         */
         public Duration getConnectionCheckInterval() {
-            return this.connectionCheckInterval;
+            return getTimeBetweenExpirationCheck();
         }
 
+        /**
+         * The time to sleep between runs of the connection check thread which will only
+         * run if the configuration value is non-negative.
+         *
+         * @param connectionCheckInterval
+         *      Time to sleep between connection idle checks (negative value disables the check).
+         */
         public void setConnectionCheckInterval(long connectionCheckInterval) {
-            this.connectionCheckInterval = Duration.ofMillis(connectionCheckInterval);
+            setTimeBetweenExpirationCheck(Duration.ofMillis(connectionCheckInterval));
         }
 
-        public boolean isUseAnonymousProducers() {
-            return this.useAnonymousProducers;
-        }
-
-        public void setUseAnonymousProducers(boolean useAnonymousProducers) {
-            this.useAnonymousProducers = useAnonymousProducers;
+        /**
+         * The time to sleep between runs of the connection check thread which will only
+         * run if the configuration value is non-negative.
+         *
+         * @param connectionCheckInterval
+         *      Time to sleep between connection idle checks (negative value disables the check).
+         */
+        public void setConnectionCheckInterval(Duration connectionCheckInterval) {
+            setTimeBetweenExpirationCheck(connectionCheckInterval);
         }
 
         public boolean isUseProviderJMSContext() {
@@ -292,24 +281,6 @@ public class AMQP10JMSProperties {
 
         public void setExplicitProducerCacheSize(int explicitProducerCacheSize) {
             this.explicitProducerCacheSize = explicitProducerCacheSize;
-        }
-
-        public void configurePooledFactory(JmsPoolConnectionFactory factory) {
-            factory.setBlockIfSessionPoolIsFull(isBlockIfSessionPoolIsFull());
-            if (getBlockIfSessionPoolIsFullTimeout() != null) {
-                factory.setBlockIfSessionPoolIsFullTimeout(getBlockIfSessionPoolIsFullTimeout().toMillis());
-            }
-            if (getConnectionCheckInterval() != null) {
-                factory.setConnectionCheckInterval(getConnectionCheckInterval().toMillis());
-            }
-            if (getConnectionIdleTimeout() != null) {
-                factory.setConnectionIdleTimeout((int) getConnectionIdleTimeout().toMillis());
-            }
-            factory.setExplicitProducerCacheSize(getExplicitProducerCacheSize());
-            factory.setMaxConnections(getMaxConnections());
-            factory.setMaxSessionsPerConnection(getMaxSessionsPerConnection());
-            factory.setUseAnonymousProducers(isUseAnonymousProducers());
-            factory.setUseProviderJMSContext(isUseProviderJMSContext());
         }
     }
 }

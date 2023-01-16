@@ -58,6 +58,8 @@ public class HelloWorldExampleTest {
     public void testMessageIsSent(TestInfo info) throws Exception {
         producer.sendMessage("Hello: " + info.getDisplayName());
 
+        Thread.sleep(20);
+
         // Should have our send plus the one sent by the run of MessageProducer by Spring
         Queue queueView = getProxyToQueue("example");
         assertEquals(2, queueView.getMessagesAcknowledged());

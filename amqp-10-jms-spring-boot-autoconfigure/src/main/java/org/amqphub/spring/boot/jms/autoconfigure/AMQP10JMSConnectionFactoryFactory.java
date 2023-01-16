@@ -23,6 +23,7 @@ import org.apache.qpid.jms.JmsConnectionFactory;
 import org.apache.qpid.jms.policy.JmsDefaultDeserializationPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -44,8 +45,8 @@ public class AMQP10JMSConnectionFactoryFactory {
      * @param properties
      *      The QpidJMSProperties to use when building new factories.
      */
-    public AMQP10JMSConnectionFactoryFactory(AMQP10JMSProperties properties) {
-        this(properties, null);
+    public AMQP10JMSConnectionFactoryFactory(ListableBeanFactory beanFactory, AMQP10JMSProperties properties) {
+        this(beanFactory, properties, null);
     }
 
     /**
@@ -56,7 +57,7 @@ public class AMQP10JMSConnectionFactoryFactory {
      * @param factoryCustomizers
      *      Optional list of customizers used to let users override configuration settings.
      */
-    public AMQP10JMSConnectionFactoryFactory(AMQP10JMSProperties properties, List<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers) {
+    public AMQP10JMSConnectionFactoryFactory(ListableBeanFactory beanFactory, AMQP10JMSProperties properties, List<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers) {
         Assert.notNull(properties, "Properties must not be null");
         this.properties = properties;
         this.factoryCustomizers = (factoryCustomizers != null ? factoryCustomizers : Collections.emptyList());
@@ -111,14 +112,14 @@ public class AMQP10JMSConnectionFactoryFactory {
         JmsDefaultDeserializationPolicy deserializationPolicy =
             (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
 
-        if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getWhiteList())) {
+        if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getAllowList())) {
             deserializationPolicy.setAllowList(StringUtils.collectionToCommaDelimitedString(
-                    properties.getDeserializationPolicy().getWhiteList()));
+                    properties.getDeserializationPolicy().getAllowList()));
         }
 
-        if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getBlackList())) {
+        if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getDenyList())) {
             deserializationPolicy.setDenyList(StringUtils.collectionToCommaDelimitedString(
-                    properties.getDeserializationPolicy().getBlackList()));
+                    properties.getDeserializationPolicy().getDenyList()));
         }
     }
 

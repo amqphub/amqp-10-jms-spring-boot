@@ -16,18 +16,18 @@
  */
 package org.amqphub.spring.boot.jms.autoconfigure;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.connection.CachingConnectionFactory;
 
 import jakarta.jms.ConnectionFactory;
 
@@ -36,96 +36,123 @@ import jakarta.jms.ConnectionFactory;
  */
 public class AMQP10JMSAutoConfigurationTest {
 
-    private AnnotationConfigApplicationContext context;
+    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+        .withConfiguration(AutoConfigurations.of(AMQP10JMSAutoConfiguration.class, JmsAutoConfiguration.class));
 
-    @AfterEach
-    public void tearDown() {
-        if (this.context != null) {
-            this.context.close();
-        }
+    @Test
+    public void testConnectionFactoryIsCachedByDefault() {
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class).run((context) -> {
+            assertThat(context).hasSingleBean(ConnectionFactory.class).hasSingleBean(CachingConnectionFactory.class)
+                    .hasBean("jmsConnectionFactory");
+            CachingConnectionFactory connectionFactory = context.getBean(CachingConnectionFactory.class);
+            assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
+            assertThat(connectionFactory.getTargetConnectionFactory()).isInstanceOf(JmsConnectionFactory.class);
+            assertThat(connectionFactory.isCacheConsumers()).isFalse();
+            assertThat(connectionFactory.isCacheProducers()).isTrue();
+            assertThat(connectionFactory.getSessionCacheSize()).isOne();
+            assertThat(connectionFactory.getTargetConnectionFactory() instanceof JmsConnectionFactory);
+        });
     }
 
     @Test
     public void testDefaultsToLocalURI() {
-        load(EmptyConfiguration.class);
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class).run((context) -> {
+            assertThat(context).hasSingleBean(ConnectionFactory.class).hasSingleBean(CachingConnectionFactory.class)
+                    .hasBean("jmsConnectionFactory");
+            CachingConnectionFactory connectionFactory = context.getBean(CachingConnectionFactory.class);
+            assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
 
-        JmsTemplate jmsTemplate = this.context.getBean(JmsTemplate.class);
-        ConnectionFactory connectionFactory =
-            this.context.getBean(ConnectionFactory.class);
+            JmsConnectionFactory qpidJmsFactory = (JmsConnectionFactory) connectionFactory.getTargetConnectionFactory();
 
-        assertTrue(connectionFactory instanceof JmsConnectionFactory);
+            assertEquals("amqp://localhost:5672", qpidJmsFactory.getRemoteURI());
+            assertNull(qpidJmsFactory.getUsername());
+            assertNull(qpidJmsFactory.getPassword());
+        });
+    }
 
-        JmsConnectionFactory qpidJmsFactory = (JmsConnectionFactory) connectionFactory;
+    @Test
+    public void testConnectionFactoryCachedCanBeDisabled() {
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
+            .withPropertyValues("spring.jms.cache.enabled=false").run((context) -> {
 
-        assertEquals(jmsTemplate.getConnectionFactory(), connectionFactory);
-        assertEquals("amqp://localhost:5672", qpidJmsFactory.getRemoteURI());
-        assertNull(qpidJmsFactory.getUsername());
-        assertNull(qpidJmsFactory.getPassword());
+            assertThat(context).hasSingleBean(ConnectionFactory.class).hasSingleBean(AMQP10JMSAutoConfiguration.class)
+                    .hasBean("jmsConnectionFactory");
+            ConnectionFactory connectionFactory = context.getBean(ConnectionFactory.class);
+            assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
+
+            assertThat(connectionFactory instanceof JmsConnectionFactory);
+        });
     }
 
     @Test
     public void testCustomConnectionFactorySettings() {
-        load(EmptyConfiguration.class,
-             "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672",
-             "amqphub.amqp10jms.username=foo",
-             "amqphub.amqp10jms.password=bar");
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
+            .withPropertyValues(
+                "spring.jms.cache.enabled=false",
+                "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672",
+                "amqphub.amqp10jms.username=foo",
+                "amqphub.amqp10jms.password=bar").run((context) -> {
 
-        JmsTemplate jmsTemplate = this.context.getBean(JmsTemplate.class);
-        JmsConnectionFactory connectionFactory =
-            this.context.getBean(JmsConnectionFactory.class);
+            assertThat(context).hasSingleBean(ConnectionFactory.class).hasSingleBean(AMQP10JMSAutoConfiguration.class)
+                    .hasBean("jmsConnectionFactory");
+            ConnectionFactory connectionFactory = context.getBean(ConnectionFactory.class);
+            assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
 
-        assertEquals(jmsTemplate.getConnectionFactory(), connectionFactory);
-        assertEquals("amqp://127.0.0.1:5672", connectionFactory.getRemoteURI());
-        assertEquals("foo", connectionFactory.getUsername());
-        assertEquals("bar", connectionFactory.getPassword());
+            assertThat(connectionFactory instanceof JmsConnectionFactory);
+
+            JmsConnectionFactory qpidJmsFactory = (JmsConnectionFactory) connectionFactory;
+            assertEquals("amqp://127.0.0.1:5672", qpidJmsFactory.getRemoteURI());
+            assertEquals("foo", qpidJmsFactory.getUsername());
+            assertEquals("bar", qpidJmsFactory.getPassword());
+        });
     }
 
     @Test
     public void testReceiveLocalOnlyOptionsAppliedFromEnv() {
-        load(EmptyConfiguration.class,
-             "amqphub.amqp10jms.receiveLocalOnly=true",
-             "amqphub.amqp10jms.receiveNoWaitLocalOnly=true");
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
+            .withPropertyValues(
+                "spring.jms.cache.enabled=false",
+                "amqphub.amqp10jms.receiveLocalOnly=true",
+                "amqphub.amqp10jms.receiveNoWaitLocalOnly=true").run((context) -> {
 
-        JmsTemplate jmsTemplate = this.context.getBean(JmsTemplate.class);
-        JmsConnectionFactory connectionFactory =
-            this.context.getBean(JmsConnectionFactory.class);
+            assertThat(context).hasSingleBean(ConnectionFactory.class).hasSingleBean(AMQP10JMSAutoConfiguration.class)
+                    .hasBean("jmsConnectionFactory");
+            ConnectionFactory connectionFactory = context.getBean(ConnectionFactory.class);
+            assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
 
-        assertEquals(jmsTemplate.getConnectionFactory(), connectionFactory);
+            assertThat(connectionFactory instanceof JmsConnectionFactory);
 
-        assertTrue(connectionFactory.isReceiveLocalOnly());
-        assertTrue(connectionFactory.isReceiveNoWaitLocalOnly());
+            JmsConnectionFactory qpidJmsFactory = (JmsConnectionFactory) connectionFactory;
+            assertTrue(qpidJmsFactory.isReceiveLocalOnly());
+            assertTrue(qpidJmsFactory.isReceiveNoWaitLocalOnly());
+        });
     }
 
     @Test
     public void testReceiveLocalOnlyOptionsAppliedFromEnvOverridesURI() {
-        load(EmptyConfiguration.class,
-             "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672" +
-                 "?jms.receiveLocalOnly=false&jms.receiveNoWaitLocalOnly=false",
-             "amqphub.amqp10jms.receiveLocalOnly=true",
-             "amqphub.amqp10jms.receiveNoWaitLocalOnly=true");
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
+            .withPropertyValues(
+                "spring.jms.cache.enabled=false",
+                "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672" +
+                    "?jms.receiveLocalOnly=false&jms.receiveNoWaitLocalOnly=false",
+                "amqphub.amqp10jms.receiveLocalOnly=true",
+                "amqphub.amqp10jms.receiveNoWaitLocalOnly=true").run((context) -> {
 
-        JmsTemplate jmsTemplate = this.context.getBean(JmsTemplate.class);
-        JmsConnectionFactory connectionFactory =
-            this.context.getBean(JmsConnectionFactory.class);
+            assertThat(context).hasSingleBean(ConnectionFactory.class).hasSingleBean(AMQP10JMSAutoConfiguration.class)
+                    .hasBean("jmsConnectionFactory");
+            ConnectionFactory connectionFactory = context.getBean(ConnectionFactory.class);
+            assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
 
-        assertEquals(jmsTemplate.getConnectionFactory(), connectionFactory);
+            assertThat(connectionFactory instanceof JmsConnectionFactory);
 
-        assertTrue(connectionFactory.isReceiveLocalOnly());
-        assertTrue(connectionFactory.isReceiveNoWaitLocalOnly());
+            JmsConnectionFactory qpidJmsFactory = (JmsConnectionFactory) connectionFactory;
+            assertTrue(qpidJmsFactory.isReceiveLocalOnly());
+            assertTrue(qpidJmsFactory.isReceiveNoWaitLocalOnly());
+        });
     }
 
-    @Configuration
-    static class EmptyConfiguration {}
+    @Configuration(proxyBeanMethods = false)
+    static class EmptyConfiguration {
 
-    private void load(Class<?> config, String... environment) {
-        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-        applicationContext.register(config);
-        applicationContext.register(AMQP10JMSAutoConfiguration.class, JmsAutoConfiguration.class);
-
-        TestPropertyValues.of(environment)
-                .applyTo(applicationContext);
-
-        applicationContext.refresh();
-        this.context = applicationContext;
     }
 }

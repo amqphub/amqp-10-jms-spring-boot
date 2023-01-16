@@ -45,6 +45,20 @@ public class AMQP10JMSPooledAutoConfigurationTest {
     }
 
     @Test
+    public void testPooledConenctionOptionOverridesCachingConnectionFactory() {
+        load(EmptyConfiguration.class,
+            "spring.jms.cache.enabled=true",
+            "amqphub.amqp10jms.pool.enabled=true");
+
+        JmsTemplate jmsTemplate = this.context.getBean(JmsTemplate.class);
+        ConnectionFactory connectionFactory =
+            this.context.getBean(ConnectionFactory.class);
+
+        assertTrue(connectionFactory instanceof JmsPoolConnectionFactory);
+        assertEquals(jmsTemplate.getConnectionFactory(), connectionFactory);
+    }
+
+    @Test
     public void testDefaultsToPoolDefaults() {
         load(EmptyConfiguration.class,
             "amqphub.amqp10jms.pool.enabled=true");
@@ -91,6 +105,43 @@ public class AMQP10JMSPooledAutoConfigurationTest {
             "amqphub.amqp10jms.pool.connectionIdleTimeout=100",
             "amqphub.amqp10jms.pool.connectionCheckInterval=50",
             "amqphub.amqp10jms.pool.blockIfSessionPoolIsFullTimeout=3000",
+            "amqphub.amqp10jms.pool.enabled=true");
+
+        ConnectionFactory connectionFactory =
+            this.context.getBean(ConnectionFactory.class);
+
+        assertTrue(connectionFactory instanceof JmsPoolConnectionFactory);
+
+        JmsPoolConnectionFactory pooledFactory = (JmsPoolConnectionFactory) connectionFactory;
+
+        assertFalse(pooledFactory.isBlockIfSessionPoolIsFull());
+        assertFalse(pooledFactory.isUseAnonymousProducers());
+        assertTrue(pooledFactory.isUseProviderJMSContext());
+
+        assertEquals(2, pooledFactory.getMaxConnections());
+        assertEquals(100, pooledFactory.getMaxSessionsPerConnection());
+        assertEquals(5, pooledFactory.getExplicitProducerCacheSize());
+
+        assertEquals(100, pooledFactory.getConnectionIdleTimeout());
+        assertEquals(50, pooledFactory.getConnectionCheckInterval());
+        assertEquals(3000, pooledFactory.getBlockIfSessionPoolIsFullTimeout());
+
+        assertTrue(pooledFactory.getConnectionFactory() instanceof JmsConnectionFactory);
+    }
+
+    @Test
+    public void testConfiguredJmsPoolConnectionFactoryUsingSpringNames() {
+        load(EmptyConfiguration.class,
+            "amqphub.amqp10jms.pool.blockIfFull=false",
+            "amqphub.amqp10jms.pool.blockIfFullTimeout=3000",
+            "amqphub.amqp10jms.pool.idleTimeout=100",
+            "amqphub.amqp10jms.pool.timeBetweenExpirationCheck=50",
+            "amqphub.amqp10jms.pool.maxConnections=2",
+            "amqphub.amqp10jms.pool.maxSessionsPerConnection=100",
+            "amqphub.amqp10jms.pool.useAnonymousProducers=false",
+            // Qpid JMS Starter specific names
+            "amqphub.amqp10jms.pool.useProviderJMSContext=true",
+            "amqphub.amqp10jms.pool.explicitProducerCacheSize=5",
             "amqphub.amqp10jms.pool.enabled=true");
 
         ConnectionFactory connectionFactory =
