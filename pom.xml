@@ -187,6 +187,7 @@
             <exclude>**/target/</exclude>
             <exclude>**/data/</exclude>
             <exclude>**/*.lock</exclude>
+            <exclude>**/.github/</exclude>
             <exclude>**/META-INF/services/*</exclude>
             <exclude>**/*.iml</exclude>
             <exclude>**/*.keystore</exclude>
