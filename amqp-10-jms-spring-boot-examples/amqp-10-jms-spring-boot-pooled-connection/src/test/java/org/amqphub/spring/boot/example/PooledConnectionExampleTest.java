@@ -17,6 +17,7 @@
 package org.amqphub.spring.boot.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.activemq.artemis.api.core.SimpleString;
 import org.apache.activemq.artemis.core.server.Queue;
@@ -60,11 +61,10 @@ public class PooledConnectionExampleTest {
 
         assertEquals(1, server.getActiveMQServer().getConnectionCount());
 
-        Thread.sleep(10);
-
         // Should have our send plus the one's sent by the run of MessageProducer by Spring
         Queue queueView = getProxyToQueue("example");
-        assertEquals(20, queueView.getMessagesAcknowledged());
+
+        assertTrue(Wait.waitFor(() -> queueView.getMessagesAcknowledged() == 20));
     }
 
     public Queue getProxyToQueue(String queueName) {

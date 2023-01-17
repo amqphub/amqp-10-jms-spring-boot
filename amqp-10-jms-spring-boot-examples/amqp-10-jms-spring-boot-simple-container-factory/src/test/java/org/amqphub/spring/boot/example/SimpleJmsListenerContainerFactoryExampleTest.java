@@ -16,7 +16,7 @@
  */
 package org.amqphub.spring.boot.example;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.activemq.artemis.api.core.SimpleString;
 import org.apache.activemq.artemis.core.server.Queue;
@@ -58,11 +58,9 @@ public class SimpleJmsListenerContainerFactoryExampleTest {
     public void testMessageIsSent(TestInfo info) throws Exception {
         producer.sendMessage("Hello: " + info.getDisplayName());
 
-        Thread.sleep(20);
-
         // Should have our send plus the one sent by the run of MessageProducer by Spring
         Queue queueView = getProxyToQueue("example");
-        assertEquals(2, queueView.getMessagesAcknowledged());
+        assertTrue(Wait.waitFor(() -> queueView.getMessagesAcknowledged() == 2));
     }
 
     public Queue getProxyToQueue(String queueName) {
