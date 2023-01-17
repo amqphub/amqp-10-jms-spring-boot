@@ -23,6 +23,8 @@ import org.springframework.boot.autoconfigure.jms.JmsPoolConnectionFactoryProper
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import jakarta.jms.JMSContext;
+
 /**
  * Configuration properties for the AMQP 1.0 JMS client
  */
@@ -178,6 +180,9 @@ public class AMQP10JMSProperties {
          */
         private boolean useProviderJMSContext = false;
 
+        /**
+         * @return if the session pool blocks when full.
+         */
         public boolean isBlockIfSessionPoolIsFull() {
             return isBlockIfFull();
         }
@@ -193,6 +198,9 @@ public class AMQP10JMSProperties {
             this.setBlockIfFull(blockIfSessionPoolIsFull);
         }
 
+        /**
+         * @return the amount of time a session pool operation blocks if configured to do so.
+         */
         public Duration getBlockIfSessionPoolIsFullTimeout() {
             return getBlockIfFullTimeout();
         }
@@ -219,6 +227,9 @@ public class AMQP10JMSProperties {
             setBlockIfFullTimeout(blockIfSessionPoolIsFullTimeout);
         }
 
+        /**
+         * @return the time a connection must be idle before being a candidate for eviction.
+         */
         public Duration getConnectionIdleTimeout() {
             return getIdleTimeout();
         }
@@ -240,6 +251,8 @@ public class AMQP10JMSProperties {
         /**
          * @return The time to sleep between runs of the connection check thread which will only
          * run if the configuration value is non-negative.
+         *
+         * @see #getIdleTimeout()
          */
         public Duration getConnectionCheckInterval() {
             return getTimeBetweenExpirationCheck();
@@ -251,6 +264,8 @@ public class AMQP10JMSProperties {
          *
          * @param connectionCheckInterval
          *      Time to sleep between connection idle checks (negative value disables the check).
+         *
+         * @see #setIdleTimeout(Duration)
          */
         public void setConnectionCheckInterval(long connectionCheckInterval) {
             setTimeBetweenExpirationCheck(Duration.ofMillis(connectionCheckInterval));
@@ -262,23 +277,54 @@ public class AMQP10JMSProperties {
          *
          * @param connectionCheckInterval
          *      Time to sleep between connection idle checks (negative value disables the check).
+         *
+         * @see #setIdleTimeout(Duration)
          */
         public void setConnectionCheckInterval(Duration connectionCheckInterval) {
             setTimeBetweenExpirationCheck(connectionCheckInterval);
         }
 
+        /**
+         * @return if the pooled {@link JMSContext} is used or a provider specific instance.
+         */
         public boolean isUseProviderJMSContext() {
             return useProviderJMSContext;
         }
 
+        /**
+         * Controls whether the pool will use a generic JMSContext that wraps a pooled Connection or
+         * uses the provider JMS ConnectionFactory to directly create JMSContext instances.  The generic
+         * JMSContext object cannot fully implement all methods of the simplified API and must be disabled
+         * in the case where those methods are needed. The default is to use the generic pooling JMS context
+         * but if the unsupported features are needed (e.g. acknowledgement from the context) then this value
+         * can be set to true but this disabled pooling for {@link JMSContext} instances.
+         *
+         * @param useProviderJMSContext
+         *      Sets if the pooled {@link JMSContext} is used or a provider specific instance.
+         */
         public void setUseProviderJMSContext(boolean useProviderJMSContext) {
             this.useProviderJMSContext = useProviderJMSContext;
         }
 
+        /**
+         * @return the configured number of explicit destination JMS producers to cache.
+         */
         public int getExplicitProducerCacheSize() {
             return explicitProducerCacheSize;
         }
 
+        /**
+         * When the useAnonymousProducers option is disabled this option controls whether a
+         * pooled session will cache some number of explicit JMS producers in an LRUCache.
+         * If enabled the session would cache up to the configured number of explicit JMS
+         * producers and discard the oldest cached value if the limit is exceeded.
+         * <p>
+         * This caching would only be done when the {@link #setUseAnonymousProducers(boolean)}
+         * configuration option is disabled.
+         *
+         * @param explicitProducerCacheSize
+         *      The total number of explicit destination JMS producers to cache
+         */
         public void setExplicitProducerCacheSize(int explicitProducerCacheSize) {
             this.explicitProducerCacheSize = explicitProducerCacheSize;
         }
