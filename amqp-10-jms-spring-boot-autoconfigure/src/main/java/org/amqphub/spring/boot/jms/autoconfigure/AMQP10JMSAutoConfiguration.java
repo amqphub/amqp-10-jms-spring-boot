@@ -17,8 +17,7 @@
 package org.amqphub.spring.boot.jms.autoconfigure;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
@@ -32,11 +31,15 @@ import jakarta.jms.ConnectionFactory;
 
 /**
  * Auto Configuration class for the AMQP 1.0 JMS client allowing for the addition
- * of connection pooling based on configuration.
+ * of connection pooling based on configuration. The auto configuration creates a
+ * {@link ConnectionFactory} that provides Qpid JMS based connections to the application
+ * configured from {@link AMQP10JMSProperties} if pooling is enabled the Qpid JMS factory
+ * is wrapped in a {@link ConnectionFactory} that pooled JMS connection resources.
+ *
+ * @see AMQP10JMSProperties
  */
 @Configuration
-@AutoConfigureBefore(JmsAutoConfiguration.class)
-@AutoConfigureAfter({JndiConnectionFactoryAutoConfiguration.class})
+@AutoConfiguration(before = JmsAutoConfiguration.class, after = JndiConnectionFactoryAutoConfiguration.class)
 @ConditionalOnMissingBean(ConnectionFactory.class)
 @ConditionalOnClass({ConnectionFactory.class, JmsConnectionFactory.class})
 @EnableConfigurationProperties({AMQP10JMSProperties.class, JmsProperties.class})
