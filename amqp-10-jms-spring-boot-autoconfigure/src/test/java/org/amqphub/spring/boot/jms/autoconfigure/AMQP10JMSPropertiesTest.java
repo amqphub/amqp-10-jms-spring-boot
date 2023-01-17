@@ -21,10 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Collections;
-
-import org.apache.qpid.jms.JmsConnectionFactory;
-import org.apache.qpid.jms.policy.JmsDefaultDeserializationPolicy;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -50,50 +46,6 @@ public class AMQP10JMSPropertiesTest {
     @Test
     public void testNoClientIdSetByDefault() {
         assertNull(properties.getClientId());
-    }
-
-    @Test
-    public void testWhiteListDefaultToEmpty() {
-        JmsConnectionFactory factory = new AMQP10JMSConnectionFactoryFactory(null, this.properties).createConnectionFactory(JmsConnectionFactory.class);
-
-        JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
-
-        assertEquals(1, policy.getAllowList().length());
-    }
-
-    @Test
-    public void testLocalOnlyReceiveOptions() {
-        this.properties.setReceiveLocalOnly(true);
-        this.properties.setReceiveNoWaitLocalOnly(true);
-
-        JmsConnectionFactory factory = new AMQP10JMSConnectionFactoryFactory(
-            null, this.properties).createConnectionFactory(JmsConnectionFactory.class);
-
-        assertTrue(factory.isReceiveLocalOnly());
-        assertTrue(factory.isReceiveNoWaitLocalOnly());
-    }
-
-    @Test
-    public void testBlackListDefaultToEmpty() {
-        JmsConnectionFactory factory = new AMQP10JMSConnectionFactoryFactory(
-            null, this.properties).createConnectionFactory(JmsConnectionFactory.class);
-
-        JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
-
-        assertEquals(0, policy.getDenyList().length());
-    }
-
-    @Test
-    public void testDeserializationPolicyValuesAreApplied() {
-        this.properties.getDeserializationPolicy().setAllowList(Collections.singletonList("org.apache.qpid.proton.*"));
-        this.properties.getDeserializationPolicy().setDenyList(Collections.singletonList("org.apache.activemq..*"));
-
-        JmsConnectionFactory factory = new AMQP10JMSConnectionFactoryFactory(null, this.properties).createConnectionFactory(JmsConnectionFactory.class);
-
-        JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
-
-        assertEquals("org.apache.qpid.proton.*", policy.getAllowList());
-        assertEquals("org.apache.activemq..*", policy.getDenyList());
     }
 
     @Test

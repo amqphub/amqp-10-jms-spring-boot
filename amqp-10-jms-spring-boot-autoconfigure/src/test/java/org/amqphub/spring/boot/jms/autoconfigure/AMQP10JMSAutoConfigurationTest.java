@@ -22,10 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
+import org.apache.qpid.jms.policy.JmsDefaultDeserializationPolicy;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.connection.CachingConnectionFactory;
 
@@ -151,8 +153,111 @@ public class AMQP10JMSAutoConfigurationTest {
         });
     }
 
+    @Test
+    public void testAllowListDefaultToNonEmpty() {
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
+            .withPropertyValues("spring.jms.cache.enabled=false",
+                                "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672"
+                ).run((context) -> {
+
+                JmsConnectionFactory factory = (JmsConnectionFactory) context.getBean(ConnectionFactory.class);
+                JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
+
+                assertThat(policy.getAllowList().isEmpty()).isFalse();
+            });
+    }
+
+    @Test
+    public void testDenyListDefaultToEmpty() {
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
+            .withPropertyValues("spring.jms.cache.enabled=false",
+                                "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672"
+                ).run((context) -> {
+
+                JmsConnectionFactory factory = (JmsConnectionFactory) context.getBean(ConnectionFactory.class);
+                JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
+
+                assertThat(policy.getDenyList().isEmpty()).isTrue();
+            });
+    }
+
+    @Test
+    public void testDeserializationPolicyValuesAreApplied() {
+        this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
+            .withPropertyValues("spring.jms.cache.enabled=false",
+                                "amqphub.amqp10jms.remote-url=amqp://127.0.0.1:5672",
+                                "amqphub.amqp10jms.deserializationPolicy.allowList=org.apache.qpid.proton.*",
+                                "amqphub.amqp10jms.deserializationPolicy.denyList=org.apache.activemq..*"
+                ).run((context) -> {
+
+                JmsConnectionFactory factory = (JmsConnectionFactory) context.getBean(ConnectionFactory.class);
+                JmsDefaultDeserializationPolicy policy = (JmsDefaultDeserializationPolicy) factory.getDeserializationPolicy();
+
+                assertEquals("org.apache.qpid.proton.*", policy.getAllowList());
+                assertEquals("org.apache.activemq..*", policy.getDenyList());
+            });
+    }
+
+    @Test
+    public void testCreateWithCustomArtemisConfiguration() {
+        this.contextRunner.withUserConfiguration(CustomAMQP10JMSConfiguration.class)
+            .run((context) -> {
+                CachingConnectionFactory connectionFactory = context.getBean(CachingConnectionFactory.class);
+                assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
+
+                JmsConnectionFactory qpidJmsFactory = (JmsConnectionFactory) connectionFactory.getTargetConnectionFactory();
+
+                assertThat(qpidJmsFactory.getUsername()).isEqualTo("customizedUser");
+                assertThat(qpidJmsFactory.getPassword()).isEqualTo("customizedPass");
+            });
+    }
+
+    @Test
+    public void testCreateWithMultipleCustomArtemisConfiguration() {
+        this.contextRunner.withUserConfiguration(MultipleCustomAMQP10JMSConfigurations.class)
+            .run((context) -> {
+                CachingConnectionFactory connectionFactory = context.getBean(CachingConnectionFactory.class);
+                assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
+
+                JmsConnectionFactory qpidJmsFactory = (JmsConnectionFactory) connectionFactory.getTargetConnectionFactory();
+
+                assertThat(qpidJmsFactory.getUsername()).isEqualTo("customizedUser");
+                assertThat(qpidJmsFactory.getPassword()).isEqualTo("customizedPass");
+            });
+    }
+
     @Configuration(proxyBeanMethods = false)
     static class EmptyConfiguration {
 
+    }
+
+    @Configuration(proxyBeanMethods = false)
+    static class CustomAMQP10JMSConfiguration {
+
+        @Bean
+        AMQP10JMSConnectionFactoryCustomizer configurationCustomizer() {
+            return (configuration) -> {
+                configuration.setPassword("customizedPass");
+                configuration.setUsername("customizedUser");
+            };
+        }
+    }
+
+    @Configuration(proxyBeanMethods = false)
+    static class MultipleCustomAMQP10JMSConfigurations {
+
+        @Bean(name = "configurationCustomizer1")
+        AMQP10JMSConnectionFactoryCustomizer configurationCustomizer1() {
+            return (configuration) -> {
+                configuration.setUsername("customizedUser");
+            };
+        }
+
+        @Bean(name = "configurationCustomizer2")
+        AMQP10JMSConnectionFactoryCustomizer configurationCustomizer2() {
+            return (configuration) -> {
+                configuration.setPassword("customizedPass");
+            };
+        }
     }
 }

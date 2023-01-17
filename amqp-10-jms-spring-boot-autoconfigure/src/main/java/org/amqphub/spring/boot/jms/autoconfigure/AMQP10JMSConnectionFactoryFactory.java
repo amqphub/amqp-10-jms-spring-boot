@@ -16,14 +16,11 @@
  */
 package org.amqphub.spring.boot.jms.autoconfigure;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.apache.qpid.jms.policy.JmsDefaultDeserializationPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -37,17 +34,7 @@ public class AMQP10JMSConnectionFactoryFactory {
 
     private final AMQP10JMSProperties properties;
 
-    private final List<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers;
-
-    /**
-     * Creates a new QpidJMSConnectionFactoryFactory instance
-     *
-     * @param properties
-     *      The QpidJMSProperties to use when building new factories.
-     */
-    public AMQP10JMSConnectionFactoryFactory(ListableBeanFactory beanFactory, AMQP10JMSProperties properties) {
-        this(beanFactory, properties, null);
-    }
+    private final ObjectProvider<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers;
 
     /**
      * Creates a new QpidJMSConnectionFactoryFactory instance
@@ -57,10 +44,10 @@ public class AMQP10JMSConnectionFactoryFactory {
      * @param factoryCustomizers
      *      Optional list of customizers used to let users override configuration settings.
      */
-    public AMQP10JMSConnectionFactoryFactory(ListableBeanFactory beanFactory, AMQP10JMSProperties properties, List<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers) {
+    public AMQP10JMSConnectionFactoryFactory(AMQP10JMSProperties properties, ObjectProvider<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers) {
         Assert.notNull(properties, "Properties must not be null");
         this.properties = properties;
-        this.factoryCustomizers = (factoryCustomizers != null ? factoryCustomizers : Collections.emptyList());
+        this.factoryCustomizers = factoryCustomizers;
     }
 
     /**
@@ -74,7 +61,7 @@ public class AMQP10JMSConnectionFactoryFactory {
      */
     public JmsConnectionFactory createConnectionFactory(Class<JmsConnectionFactory> factoryClass) {
         try {
-            JmsConnectionFactory factory = new JmsConnectionFactory();
+            JmsConnectionFactory factory = factoryClass.getConstructor().newInstance();
 
             factory.setRemoteURI(properties.getRemoteUrl());
 
@@ -114,18 +101,16 @@ public class AMQP10JMSConnectionFactoryFactory {
 
         if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getAllowList())) {
             deserializationPolicy.setAllowList(StringUtils.collectionToCommaDelimitedString(
-                    properties.getDeserializationPolicy().getAllowList()));
+                properties.getDeserializationPolicy().getAllowList()));
         }
 
         if (!ObjectUtils.isEmpty(properties.getDeserializationPolicy().getDenyList())) {
             deserializationPolicy.setDenyList(StringUtils.collectionToCommaDelimitedString(
-                    properties.getDeserializationPolicy().getDenyList()));
+                properties.getDeserializationPolicy().getDenyList()));
         }
     }
 
     private void customizeFactoryConfiguration(JmsConnectionFactory connectionFactory) {
-        for (AMQP10JMSConnectionFactoryCustomizer factoryCustomizer : this.factoryCustomizers) {
-            factoryCustomizer.customize(connectionFactory);
-        }
+        factoryCustomizers.orderedStream().forEach((customizer) -> customizer.customize(connectionFactory));
     }
 }

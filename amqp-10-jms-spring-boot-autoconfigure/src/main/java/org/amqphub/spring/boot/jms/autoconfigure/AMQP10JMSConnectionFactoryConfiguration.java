@@ -19,7 +19,7 @@ package org.amqphub.spring.boot.jms.autoconfigure;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
-import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,7 +33,9 @@ import jakarta.jms.ConnectionFactory;
 
 /**
  * Configuration for Qpid JMS {@link ConnectionFactory} instance used when configuring
- * the client beans.
+ * the client beans. If the connection pooling option is enabled in the {@link AMQP10JMSProperties}
+ * then that is always preferred over the Spring {@link CachingConnectionFactory} which is
+ * used whenever pooling is not enabled unless explicitly disabled.
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnMissingBean(ConnectionFactory.class)
@@ -44,20 +46,14 @@ public class AMQP10JMSConnectionFactoryConfiguration {
     @ConditionalOnProperty(prefix = "amqphub.amqp10jms.pool", name = "enabled", havingValue = "false", matchIfMissing = true)
     static class SimpleConnectionFactoryConfiguration {
 
-        private final AMQP10JMSProperties properties;
-
-        private final ListableBeanFactory beanFactory;
-
-        SimpleConnectionFactoryConfiguration(AMQP10JMSProperties properties, ListableBeanFactory beanFactory) {
-            this.properties = properties;
-            this.beanFactory = beanFactory;
-        }
-
         @Bean(name = "jmsConnectionFactory")
         @ConditionalOnProperty(prefix = "spring.jms.cache", name = "enabled", havingValue = "true", matchIfMissing = true)
-        CachingConnectionFactory cachingJmsConnectionFactory(JmsProperties jmsProperties) {
+        CachingConnectionFactory cachingJmsConnectionFactory(
+            AMQP10JMSProperties properties, ObjectProvider<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers, JmsProperties jmsProperties) {
+
             JmsProperties.Cache cacheProperties = jmsProperties.getCache();
-            CachingConnectionFactory connectionFactory = new CachingConnectionFactory(createConnectionFactory());
+            CachingConnectionFactory connectionFactory = new CachingConnectionFactory(
+                createQpidJMSConnectionFactory(properties, factoryCustomizers));
             connectionFactory.setCacheConsumers(cacheProperties.isConsumers());
             connectionFactory.setCacheProducers(cacheProperties.isProducers());
             connectionFactory.setSessionCacheSize(cacheProperties.getSessionCacheSize());
@@ -66,13 +62,10 @@ public class AMQP10JMSConnectionFactoryConfiguration {
 
         @Bean(name = "jmsConnectionFactory")
         @ConditionalOnProperty(prefix = "spring.jms.cache", name = "enabled", havingValue = "false", matchIfMissing = false)
-        JmsConnectionFactory jmsConnectionFactory() {
-            return createConnectionFactory();
-        }
+        JmsConnectionFactory jmsConnectionFactory(
+            AMQP10JMSProperties properties, ObjectProvider<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers, JmsProperties jmsProperties) {
 
-        private JmsConnectionFactory createConnectionFactory() {
-            return new AMQP10JMSConnectionFactoryFactory(this.beanFactory, this.properties)
-                    .createConnectionFactory(JmsConnectionFactory.class);
+            return createQpidJMSConnectionFactory(properties, factoryCustomizers);
         }
     }
 
@@ -82,9 +75,10 @@ public class AMQP10JMSConnectionFactoryConfiguration {
     static class PooledConnectionFactoryConfiguration {
 
         @Bean(destroyMethod = "stop")
-        JmsPoolConnectionFactory jmsConnectionFactory(ListableBeanFactory beanFactory, AMQP10JMSProperties properties) {
-            JmsConnectionFactory connectionFactory = new AMQP10JMSConnectionFactoryFactory(beanFactory, properties)
-                .createConnectionFactory(JmsConnectionFactory.class);
+        JmsPoolConnectionFactory jmsConnectionFactory(
+            AMQP10JMSProperties properties, ObjectProvider<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers, JmsProperties jmsProperties) {
+
+            ConnectionFactory connectionFactory = createQpidJMSConnectionFactory(properties, factoryCustomizers);
             JmsPoolConnectionFactory poolCf = new JmsPoolConnectionFactoryFactory(properties.getPool())
                 .createPooledConnectionFactory(connectionFactory);
 
@@ -93,5 +87,10 @@ public class AMQP10JMSConnectionFactoryConfiguration {
 
             return poolCf;
         }
+    }
+
+    private static JmsConnectionFactory createQpidJMSConnectionFactory(AMQP10JMSProperties properties, ObjectProvider<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers) {
+        return new AMQP10JMSConnectionFactoryFactory(properties, factoryCustomizers)
+            .createConnectionFactory(JmsConnectionFactory.class);
     }
 }
