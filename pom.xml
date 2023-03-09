@@ -26,7 +26,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.amqphub.spring</groupId>
   <artifactId>amqp-10-jms-spring-boot-parent</artifactId>
-  <version>3.0.2</version>
+  <version>3.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>AMQP 1.0 JMS Spring Boot Starter and AutoConfiguration Tooling</name>
@@ -44,7 +44,7 @@
     <url>https://github.com/amqphub/amqp-10-jms-spring-boot.git</url>
     <connection>scm:git:git://github.com/amqphub/amqp-10-jms-spring-boot.git</connection>
     <developerConnection>scm:git:git@github.com:amqphub/amqp-10-jms-spring-boot.git</developerConnection>
-    <tag>3.0.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <developers>
