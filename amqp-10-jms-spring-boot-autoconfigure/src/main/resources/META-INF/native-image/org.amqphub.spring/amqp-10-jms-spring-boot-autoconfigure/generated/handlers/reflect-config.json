@@ -1,0 +1,12 @@
+[
+  {
+    "name": "org.apache.qpid.jms.JmsConnectionFactory",
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "methods" : [
+      { "name" : "<init>", "parameterTypes" : [] },
+      { "name" : "setRemoteURI", "parameterTypes" : ["java.lang.String"] },
+      { "name" : "setClientID", "parameterTypes" : ["java.lang.String"] }
+    ]
+  }
+]
