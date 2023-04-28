@@ -1,0 +1,31 @@
+{
+  "resources": {
+    "includes": [
+      {"pattern": "META-INF/services/org/apache/qpid/jms/provider/amqp"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/provider/amqps"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/provider/amqpws"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/provider/amqpwss"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/provider/redirects/ws"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/provider/redirects/wss"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/transports/tcp"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/transports/ssl"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/transports/ws"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/transports/wss"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/sasl/PLAIN"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/sasl/ANONYMOUS"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/sasl/EXTERNAL"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/sasl/CRAM-MD5"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/sasl/SCRAM-SHA-1"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/sasl/SCRAM-SHA-256"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/sasl/SCRAM-SHA-512"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/sasl/XOAUTH2"},
+      {"pattern": "META-INF/services/org/apache/qpid/jms/tracing/noop"},
+      {
+        "condition": {
+          "typeReachable": "io.opentracing.util.GlobalTracer"
+        },
+        "pattern": "META-INF/services/org/apache/qpid/jms/tracing/opentracing"
+      }
+    ]
+  }
+}

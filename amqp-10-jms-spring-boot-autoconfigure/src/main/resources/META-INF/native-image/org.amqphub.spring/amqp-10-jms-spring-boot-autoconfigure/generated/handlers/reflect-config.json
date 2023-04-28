@@ -1,12 +1,382 @@
 [
   {
     "name": "org.apache.qpid.jms.JmsConnectionFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
     "queryAllDeclaredMethods" : true,
     "queryAllPublicMethods" : true,
-    "methods" : [
-      { "name" : "<init>", "parameterTypes" : [] },
-      { "name" : "setRemoteURI", "parameterTypes" : ["java.lang.String"] },
-      { "name" : "setClientID", "parameterTypes" : ["java.lang.String"] }
-    ]
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.JmsConnectionInfo",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.provider.amqp.AmqpProviderFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.provider.amqp.AmqpProvider",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.provider.failover.FailoverProviderFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.provider.failover.FailoverProvider",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.transports.TransportOptions",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.transports.netty.NettyTcpTransport",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.transports.netty.NettyWsTransport",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.transports.netty.NettyTcpTransportFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.transports.netty.NettySslTransportFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.transports.netty.NettyWsTransportFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.transports.netty.NettyWssTransportFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.proton.engine.impl.TransportImpl",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.PlainMechanismFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.PlainMechanism",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.AnonymousMechanismFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.AnonymousMechanism",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.ExternalMechanismFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.ExternalMechanism",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.CramMD5MechanismFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.CramMD5Mechanism",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.ScramSHA1MechanismFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.ScramSHA1Mechanism",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.ScramSHA256MechanismFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.ScramSHA256Mechanism",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.ScramSHA512MechanismFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.ScramSHA512Mechanism",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.XOauth2MechanismFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.sasl.XOauth2Mechanism",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.tracing.JmsNoOpTracerFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "name": "org.apache.qpid.jms.tracing.JmsNoOpTracer",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "condition": {
+      "typeReachable": "io.opentracing.util.GlobalTracer"
+    },
+    "name": "org.apache.qpid.jms.tracing.opentracing.OpenTracingTracerFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
+  },
+  {
+    "condition": {
+      "typeReachable": "io.opentracing.util.GlobalTracer"
+    },
+    "name": "org.apache.qpid.jms.tracing.opentracing.OpenTracingTracer",
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allPublicConstructors": true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true
   }
 ]
