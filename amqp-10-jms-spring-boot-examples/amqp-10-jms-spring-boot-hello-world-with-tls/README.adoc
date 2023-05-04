@@ -1,0 +1,51 @@
+= AMQP 1.0 JMS Spring Boot Hello World with TLS Example
+
+This example demontrates a TLS connection to the ActiveMQ broker.
+
+== Building the example
+
+The examples is built using maven and requires a maven version 3
+version to build correctly.
+
+    mvn clean install
+
+== Running the examples
+
+The example application requires that you have an AMQP v1.0
+broker running on the local machine and listening on port *5673*.
+
+In order for this to work you have to generate a keypair:
+
+----
+cd amqp-10-jms-spring-boot-hello-world-with-tls/src/main/resources/
+source store-generation.txt
+----
+
+Now add the following acceptor to your broker (example broker.xml can be found in resources directory):
+
+----
+ <!-- AMQPS Acceptor. -->
+ <acceptor name="amqps">tcp://0.0.0.0:5673?sslEnabled=true;keyStorePath=server-keystore.p12;keyStorePassword=securepass;protocols=AMQP</acceptor>
+----
+
+[NOTE]
+You need to change the path of the file `server-keystore.p12` if you are placing it somewhere else than next to your `broker.xml`
+
+On the client site you need to change the `application.properties` file:
+
+----
+amqphub.amqp10jms.remote-url=amqps://localhost:5673?transport.trustStoreLocation=src/main/resources/server-ca-truststore.p12&transport.trustStorePassword=securepass
+----
+
+Once you have a broker running then you can run the example as
+follows:
+
+=== Hello World Example with TLS
+
+----
+cd amqp-10-jms-spring-boot-hello-world-with-tls
+java -jar target/amqp-10-jms-spring-boot-hello-world-with-tls<version>.jar
+----
+
+This example sends a text message to a queue and listens on that
+same queue for the sent message.
