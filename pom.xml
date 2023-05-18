@@ -70,7 +70,7 @@
     <maven-eclipse-plugin-version>2.10</maven-eclipse-plugin-version>
     <maven-idea-plugin-version>2.2.1</maven-idea-plugin-version>
     <maven-surefire-plugin-version>3.0.0-M8</maven-surefire-plugin-version>
-    <maven-release-plugin-version>3.0.0</maven-release-plugin-version>
+    <maven-release-plugin-version>3.0.0-M7</maven-release-plugin-version>
     <nexus-staging-maven-plugin-version>1.6.13</nexus-staging-maven-plugin-version>
 
     <!-- Test properties -->
