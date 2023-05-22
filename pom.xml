@@ -55,7 +55,7 @@
   </developers>
 
   <properties>
-    <qpid-jms-version>2.2.0</qpid-jms-version>
+    <qpid-jms-version>2.3.0</qpid-jms-version>
 
     <apache-rat-version>0.15</apache-rat-version>
 
