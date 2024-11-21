@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.amqphub.spring</groupId>
     <artifactId>amqp-10-jms-spring-boot-parent</artifactId>
-    <version>3.2.5</version>
+    <version>3.2.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>amqp-10-jms-spring-boot-autoconfigure</artifactId>
