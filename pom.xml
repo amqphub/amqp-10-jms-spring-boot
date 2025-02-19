@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.3.6</version>
+    <version>3.3.8</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -55,7 +55,7 @@
   </developers>
 
   <properties>
-    <qpid-jms-version>2.6.1</qpid-jms-version>
+    <qpid-jms-version>2.7.0</qpid-jms-version>
 
     <apache-rat-version>0.15</apache-rat-version>
 
