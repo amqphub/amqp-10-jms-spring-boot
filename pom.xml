@@ -72,6 +72,7 @@
     <maven-surefire-plugin-version>3.0.0-M8</maven-surefire-plugin-version>
     <maven-release-plugin-version>3.0.0-M7</maven-release-plugin-version>
     <nexus-staging-maven-plugin-version>1.6.13</nexus-staging-maven-plugin-version>
+    <maven-central-publishing-version>0.8.0</maven-central-publishing-version>
 
     <!-- Test properties -->
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
@@ -83,17 +84,6 @@
     <module>amqp-10-jms-spring-boot-starter</module>
     <module>amqp-10-jms-spring-boot-examples</module>
   </modules>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://ossrh-staging-api.central.sonatype.com/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
 
   <repositories>
     <repository>
@@ -262,6 +252,16 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>${maven-central-publishing-version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+          <checksums>required</checksums>
+        </configuration>
       </plugin>
     </plugins>
   </build>
