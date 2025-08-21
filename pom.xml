@@ -218,6 +218,8 @@
           </execution>
         </executions>
         <configuration>
+          <docencoding>UTF-8</docencoding>
+          <charset>UTF-8</charset>
           <source>1.8</source>
         </configuration>
       </plugin>
