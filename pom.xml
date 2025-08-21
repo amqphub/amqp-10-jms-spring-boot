@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.4</version>
+    <version>3.5.5</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -44,7 +44,7 @@
     <url>https://github.com/amqphub/amqp-10-jms-spring-boot.git</url>
     <connection>scm:git:git://github.com/amqphub/amqp-10-jms-spring-boot.git</connection>
     <developerConnection>scm:git:git@github.com:amqphub/amqp-10-jms-spring-boot.git</developerConnection>
-    <tag>3.4.4</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <developers>
