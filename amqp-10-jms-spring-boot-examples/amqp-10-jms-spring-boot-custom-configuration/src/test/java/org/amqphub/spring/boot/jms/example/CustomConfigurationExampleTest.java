@@ -72,6 +72,6 @@ public class CustomConfigurationExampleTest {
     }
 
     public Queue getProxyToQueue(String queueName) {
-        return server.getActiveMQServer().locateQueue(SimpleString.toSimpleString(queueName));
+        return server.getActiveMQServer().locateQueue(SimpleString.of(queueName));
      }
 }
