@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.amqphub.spring</groupId>
     <artifactId>amqp-10-jms-spring-boot-examples</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.0.0</version>
   </parent>
 
   <artifactId>amqp-10-jms-spring-boot-reply-service</artifactId>
