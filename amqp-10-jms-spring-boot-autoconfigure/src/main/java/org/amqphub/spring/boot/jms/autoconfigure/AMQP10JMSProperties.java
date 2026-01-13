@@ -19,7 +19,7 @@ package org.amqphub.spring.boot.jms.autoconfigure;
 import java.time.Duration;
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.jms.JmsPoolConnectionFactoryProperties;
+import org.springframework.boot.jms.autoconfigure.JmsPoolConnectionFactoryProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -66,7 +66,7 @@ public class AMQP10JMSProperties {
     private final DeserializationPolicy deserializationPolicy = new DeserializationPolicy();
 
     @NestedConfigurationProperty
-    private Pool pool = new Pool();
+    private final Pool pool = new Pool();
 
     public String getRemoteUrl() {
         return remoteUrl;
