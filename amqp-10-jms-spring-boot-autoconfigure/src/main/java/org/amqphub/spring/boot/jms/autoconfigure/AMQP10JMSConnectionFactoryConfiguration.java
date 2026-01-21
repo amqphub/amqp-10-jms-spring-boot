@@ -23,7 +23,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.jms.autoconfigure.JmsPoolConnectionFactoryFactory;
 import org.springframework.boot.jms.autoconfigure.JmsProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,14 +77,9 @@ public class AMQP10JMSConnectionFactoryConfiguration {
         JmsPoolConnectionFactory jmsConnectionFactory(
             AMQP10JMSProperties properties, ObjectProvider<AMQP10JMSConnectionFactoryCustomizer> factoryCustomizers, JmsProperties jmsProperties) {
 
-            ConnectionFactory connectionFactory = createQpidJMSConnectionFactory(properties, factoryCustomizers);
-            JmsPoolConnectionFactory poolCf = new JmsPoolConnectionFactoryFactory(properties.getPool())
-                .createPooledConnectionFactory(connectionFactory);
+            final ConnectionFactory cf = createQpidJMSConnectionFactory(properties, factoryCustomizers);
 
-            poolCf.setUseProviderJMSContext(properties.getPool().isUseProviderJMSContext());
-            poolCf.setExplicitProducerCacheSize(properties.getPool().getExplicitProducerCacheSize());
-
-            return poolCf;
+            return new AMQP10JMSJmsPoolConnectionFactoryFactory(properties.getPool()).createPooledConnectionFactory(cf);
         }
     }
 
