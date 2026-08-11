@@ -55,9 +55,10 @@
   </developers>
 
   <properties>
-    <qpid-jms-version>2.10.0</qpid-jms-version>
+    <qpid-jms-version>2.11.0</qpid-jms-version>
+    <proton-version>0.35.0</proton-version>
 
-    <apache-rat-version>0.16.1</apache-rat-version>
+    <apache-rat-version>0.18.0</apache-rat-version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -107,6 +108,16 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.qpid</groupId>
+        <artifactId>proton-j</artifactId>
+        <version>${proton-version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <defaultGoal>install</defaultGoal>
